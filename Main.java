@@ -47,5 +47,6 @@ public class Main extends JFrame
         {
             this.choosenFolder = null;
         }
+        this.view.updateSelectFolderPath(this.choosenFolder);
     }
 }

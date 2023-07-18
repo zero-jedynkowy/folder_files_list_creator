@@ -1,4 +1,6 @@
 import java.awt.Color;
+import java.io.File;
+import java.nio.file.Path;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -47,5 +49,11 @@ public class View extends JPanel
         this.selectFolderPathTitleLabel = new JLabel("Ścieżka wybranego folderu:");
         this.add(this.selectFolderPathTitleLabel);
         this.selectFolderPathTitleLabel.setBounds(this.scrollSelectFolderPath.getX(), this.scrollSelectFolderPath.getY() - 35, 200, 50);
+    }
+
+    public void updateSelectFolderPath(File newPath)
+    {
+        if(newPath == null) this.selectFolderPathLabel.setText("    BRAK");
+        else this.selectFolderPathLabel.setText("   " + newPath.getPath() + "  ");
     }
 }
