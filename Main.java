@@ -1,10 +1,13 @@
+import java.io.File;
+
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 
 public class Main extends JFrame
 {
     View view;
-   
+    File choosenFolder;
+
     public Main()
     {
         super();
@@ -13,6 +16,7 @@ public class Main extends JFrame
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.choosenFolder = null;
 
         //VIEW
         this.view = new View();
@@ -35,5 +39,13 @@ public class Main extends JFrame
         JFileChooser x = new JFileChooser("Wybierz folder");
         x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int flag = x.showOpenDialog(this);
+        if(flag == JFileChooser.APPROVE_OPTION)
+        {
+            this.choosenFolder = x.getSelectedFile();
+        }
+        else
+        {
+            this.choosenFolder = null;
+        }
     }
 }
