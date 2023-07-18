@@ -23,7 +23,7 @@ public class Main extends JFrame
         this.add(this.view);
 
         //LISTENERS
-        this.view.selectButton.addActionListener(e -> this.selectDisk());
+        this.view.selectFolderButton.addActionListener(e -> this.selectDisk());
 
         this.setVisible(true);
     }
