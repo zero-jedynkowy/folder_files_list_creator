@@ -16,6 +16,12 @@ public class View extends JPanel
     JScrollPane scrollSelectFolderPath;
     JLabel selectFolderPathLabel;
 
+
+    JButton startButton;
+    JLabel currentProgressObjectUndertitleLabel;
+    JScrollPane scrollCurrentProgressObject;
+    JLabel currentProgressObjectLabel;
+
     public View()
     {
         super();
@@ -26,6 +32,8 @@ public class View extends JPanel
         this.setSelectFolderTitle();
         this.setSelectButton();
         this.setScrollSelectFolderPath();
+        this.setStartButton();
+        this.setScrollCurrentProgressObject();
 
         this.setVisible(true);
     }
@@ -44,7 +52,7 @@ public class View extends JPanel
     {
         this.selectFolderButton = new JButton("Wybierz folder");
         this.selectFolderButton.setLocation(15, 50);
-        this.selectFolderButton.setSize(this.selectFolderButton.getText().length()*9, 50);
+        this.selectFolderButton.setSize(125, 50);
         this.add(this.selectFolderButton);
     }
 
@@ -67,5 +75,30 @@ public class View extends JPanel
     {
         if(newPath == null) this.selectFolderPathLabel.setText("    BRAK");
         else this.selectFolderPathLabel.setText("   " + newPath.getPath() + "  ");
+    }
+
+    public void setStartButton()
+    {
+        this.startButton = new JButton("START");
+        this.startButton.setText("START");
+        this.startButton.setLocation(15, 125);
+        System.out.println(this.selectFolderButton.getText().length()*9);
+        this.startButton.setSize(125, 50);
+        this.add(this.startButton);
+    }
+
+    public void setScrollCurrentProgressObject()
+    {
+        this.currentProgressObjectUndertitleLabel = new JLabel("Aktualnie przetwarzany folder/plik:");
+        this.add(this.currentProgressObjectUndertitleLabel);
+        this.currentProgressObjectUndertitleLabel.setBounds(this.startButton.getWidth() + this.startButton.getX() + 15, this.startButton.getY(), 200, 15);
+        
+        this.currentProgressObjectLabel = new JLabel("   BRAK");
+        this.scrollCurrentProgressObject = new JScrollPane(this.currentProgressObjectLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.scrollCurrentProgressObject.setBounds(this.currentProgressObjectUndertitleLabel.getX(), this.currentProgressObjectUndertitleLabel.getHeight() + this.currentProgressObjectUndertitleLabel.getY() + 5, 50, 30);
+        this.scrollCurrentProgressObject.setSize(this.getWidth() - this.scrollCurrentProgressObject.getX() - 25, 40);
+        this.currentProgressObjectLabel.setBounds(0, 0, this.scrollCurrentProgressObject.getWidth() + 200, this.scrollCurrentProgressObject.getHeight());
+        this.currentProgressObjectLabel.setVisible(true);
+        this.add(this.scrollCurrentProgressObject);
     }
 }
