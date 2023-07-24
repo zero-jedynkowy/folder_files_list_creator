@@ -1,52 +1,38 @@
-import java.io.File;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.Border;
 
 public class Main extends JFrame
 {
     View view;
-    File choosenFolder;
+
+    final static int WIDTH = 500;
+    final static int HEIGHT = 500;
 
     public Main()
     {
         super();
         this.setTitle("Lista plików");
-        this.setBounds(0, 0, 500, 500);
-        this.setResizable(false);
+        this.setLayout(new BorderLayout());
+        this.setSize(WIDTH, HEIGHT);
+        this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        this.setResizable(true);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.choosenFolder = null;
 
         //VIEW
         this.view = new View();
-        this.add(this.view);
-
-        //LISTENERS
-        this.view.selectFolderButton.addActionListener(e -> this.selectDisk());
-
+        this.add(this.view, BorderLayout.CENTER);
+        
         this.setVisible(true);
     }
     
     public static void main(String args[])
     {
         new Main();
-    }
-
-    //OTHER METHODS
-    public void selectDisk()
-    {
-        JFileChooser x = new JFileChooser("Wybierz folder");
-        x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int flag = x.showOpenDialog(this);
-        if(flag == JFileChooser.APPROVE_OPTION)
-        {
-            this.choosenFolder = x.getSelectedFile();
-        }
-        else
-        {
-            this.choosenFolder = null;
-        }
-        this.view.updateSelectFolderPath(this.choosenFolder);
     }
 }
