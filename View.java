@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
@@ -26,6 +27,15 @@ public class View extends JPanel
         JScrollPane scrollChoosingFolderPathLabel;
             JLabel choosingFolderPathLabel;
 
+    //
+    JLabel statusLabel;
+    JLabel currectProcessObjectLabel;
+    JScrollPane scrollCurrectProcessObjectPath;
+            JLabel currectProcessObjectPathLabel;
+    
+    //
+    JButton startButton;
+    
     
     public View()
     {
@@ -64,6 +74,7 @@ public class View extends JPanel
         this.choosingFolderLabel.setAlignmentX(CENTER_ALIGNMENT);
         this.changeFontSize(this.choosingFolderLabel, 20);
         this.choosingFolderLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.choosingFolderLabel.setMaximumSize(new Dimension(400, 50));
         
         //
         this.choosingFolderPathPanel = new JPanel();
@@ -83,6 +94,35 @@ public class View extends JPanel
         this.changeFontSize(this.scrollChoosingFolderPathLabel, 15);
         this.choosingFolderPathLabel.setVisible(true);
         
+        //
+        this.statusLabel = new JLabel("Aktualny status: BRAK", JLabel.CENTER);
+        this.statusLabel.setVisible(true);
+        this.statusLabel.setAlignmentX(CENTER_ALIGNMENT);
+        this.changeFontSize(this.statusLabel, 20);
+        this.statusLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.statusLabel.setPreferredSize(new Dimension(400, 50));
+
+        //
+        this.currectProcessObjectLabel = new JLabel("Aktualnie przetwarzany plik:", JLabel.CENTER);
+        this.currectProcessObjectLabel.setVisible(true);
+        this.currectProcessObjectLabel.setAlignmentX(CENTER_ALIGNMENT);
+        this.changeFontSize(this.currectProcessObjectLabel, 20);
+        this.currectProcessObjectLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.currectProcessObjectLabel.setPreferredSize(new Dimension(400, 50));
+
+        //
+        this.currectProcessObjectPathLabel = new JLabel("   BRAK");
+        this.scrollCurrectProcessObjectPath = new JScrollPane(this.currectProcessObjectPathLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.changeFontSize(this.choosingFolderPathLabel, 15);
+        this.changeFontSize(this.scrollCurrectProcessObjectPath, 15);
+        this.currectProcessObjectPathLabel.setVisible(true);
+        this.scrollCurrectProcessObjectPath.setMaximumSize(new Dimension(400, 50));
+
+        //
+        this.startButton = new JButton("START");
+        this.changeFontSize(this.startButton, 15);
+        this.startButton.setMaximumSize(new Dimension(400, 50));
+        this.startButton.setAlignmentX(CENTER_ALIGNMENT);
 
         //
         this.createListPanel.add(Box.createVerticalStrut(10));
@@ -93,6 +133,26 @@ public class View extends JPanel
             this.choosingFolderPathPanel.add(this.choosingFolderButton);
             this.choosingFolderPathPanel.add(Box.createHorizontalStrut(10));
             this.choosingFolderPathPanel.add(this.scrollChoosingFolderPathLabel);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        JSeparator x = new JSeparator();
+        x.setMaximumSize(new Dimension(450, 1));
+        this.createListPanel.add(x);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        this.createListPanel.add(this.statusLabel);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        JSeparator y = new JSeparator();
+        y.setMaximumSize(new Dimension(450, 1));
+        this.createListPanel.add(y);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        this.createListPanel.add(this.currectProcessObjectLabel);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        this.createListPanel.add(this.scrollCurrectProcessObjectPath);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        JSeparator z = new JSeparator();
+        z.setMaximumSize(new Dimension(450, 1));
+        this.createListPanel.add(z);
+        this.createListPanel.add(Box.createVerticalStrut(10));
+        this.createListPanel.add(this.startButton);
     }
 
 

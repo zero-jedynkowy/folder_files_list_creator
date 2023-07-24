@@ -16,7 +16,7 @@ public class Main extends JFrame
         this.setLayout(new BorderLayout());
         this.setSize(WIDTH, HEIGHT);
         this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
-        this.setResizable(true);
+        this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
