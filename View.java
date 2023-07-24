@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.io.File;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -157,6 +158,12 @@ public class View extends JPanel
 
 
     //
+    public void updateChoosingFolderPathLabel(File newPath)
+    {
+        if(newPath == null) this.choosingFolderPathLabel.setText("    BRAK");
+        else this.choosingFolderPathLabel.setText("   " + newPath.getPath() + "  ");
+    }
+
     public JPanel createNewPanel(String text)
     {
         JPanel panel = new JPanel(false);
