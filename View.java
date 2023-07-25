@@ -96,7 +96,7 @@ public class View extends JPanel
         this.choosingFolderPathLabel.setVisible(true);
         
         //
-        this.statusLabel = new JLabel("Aktualny status: BRAK", JLabel.CENTER);
+        this.statusLabel = new JLabel("Aktualny status: BRAK DZIAŁANIA", JLabel.CENTER);
         this.statusLabel.setVisible(true);
         this.statusLabel.setAlignmentX(CENTER_ALIGNMENT);
         this.changeFontSize(this.statusLabel, 20);
@@ -112,7 +112,7 @@ public class View extends JPanel
         this.currectProcessObjectLabel.setPreferredSize(new Dimension(400, 50));
 
         //
-        this.currectProcessObjectPathLabel = new JLabel("   BRAK");
+        this.currectProcessObjectPathLabel = new JLabel("\s\s\sBRAK");
         this.scrollCurrectProcessObjectPath = new JScrollPane(this.currectProcessObjectPathLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.changeFontSize(this.choosingFolderPathLabel, 15);
         this.changeFontSize(this.scrollCurrectProcessObjectPath, 15);
@@ -160,7 +160,7 @@ public class View extends JPanel
     //
     public void updateChoosingFolderPathLabel(File newPath)
     {
-        if(newPath == null) this.choosingFolderPathLabel.setText("    BRAK");
+        if(newPath == null) this.choosingFolderPathLabel.setText("\s\s\sBRAK");
         else this.choosingFolderPathLabel.setText("   " + newPath.getPath() + "  ");
     }
 

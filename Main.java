@@ -1,21 +1,12 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.List;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
+import java.io.PrintStream;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Queue;
-
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.text.html.HTMLDocument.Iterator;
+import javax.swing.JOptionPane;
 
 public class Main extends JFrame
 {
@@ -41,10 +32,24 @@ public class Main extends JFrame
         this.view = new View();
         this.add(this.view, BorderLayout.CENTER);
         
-
         //
         this.view.choosingFolderButton.addActionListener(e -> this.chooseFolder());
-        this.view.startButton.addActionListener(e -> this.createFolderList());
+        this.view.startButton.addActionListener(e -> {
+            if(this.choosenFolder != null) 
+            {
+                this.view.statusLabel.setText("Aktualny status: DZIAŁANIE");
+                this.view.statusLabel.paintImmediately(this.view.statusLabel.getVisibleRect());
+                this.createFolderList();
+                this.view.statusLabel.setText("Aktualny status: BRAK DZIAŁANIA");
+                this.view.statusLabel.paintImmediately(this.view.statusLabel.getVisibleRect());
+                this.view.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
+                this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
+            }            
+            else
+            {
+                JOptionPane.showMessageDialog(this,"Nie wybrano folderu do zrobienia listy!","Błąd!",JOptionPane.ERROR_MESSAGE);
+            }
+        });
         this.setVisible(true);
     }
     
@@ -108,8 +113,11 @@ public class Main extends JFrame
                         break;
                     }
                     
-                    System.out.println(newTabByLevel(twoDimensionList.size()) + twoDimensionList.getLast().getFirst().getName());
+                    mainList.add(newTabByLevel(twoDimensionList.size()) + twoDimensionList.getLast().getFirst().getName());
                     
+                    this.view.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
+                    this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
+
                     if(twoDimensionList.getLast().getFirst().isDirectory())
                     {
                         twoDimensionList.add(new LinkedList<File>(Arrays.asList(twoDimensionList.getLast().getFirst().listFiles())));
