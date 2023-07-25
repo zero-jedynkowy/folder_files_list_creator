@@ -101,12 +101,9 @@ public class Main extends JFrame
                         twoDimensionList.removeLast();
                         break;
                     }
-                    
                     mainList.add(newTabByLevel(twoDimensionList.size()) + twoDimensionList.getLast().getFirst().getName());
-                    
                     this.view.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
                     this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
-
                     if(twoDimensionList.getLast().getFirst().isDirectory())
                     {
                         twoDimensionList.add(new LinkedList<File>(Arrays.asList(twoDimensionList.getLast().getFirst().listFiles())));
@@ -119,7 +116,9 @@ public class Main extends JFrame
                 }
                 catch(Exception e)
                 {
-                    
+                   //IF THE PROGRAMME CAN'T READ THE LIST OF THE FOLDER (PROBABLY DOESN'T HAVE ACCES TO IT) IT IS SKIPPED; ONLY THE FOLDER'S NAME IS SAVED
+                    System.out.println(twoDimensionList.getLast().getFirst());
+                    twoDimensionList.getLast().removeFirst();
                 }
                 
             }
