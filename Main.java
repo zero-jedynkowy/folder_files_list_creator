@@ -1,12 +1,20 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
-import java.io.PrintStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.LinkedList;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileSystemView;
 
 public class Main extends JFrame
 {
@@ -47,7 +55,7 @@ public class Main extends JFrame
             }            
             else
             {
-                JOptionPane.showMessageDialog(this,"Nie wybrano folderu do zrobienia listy!","Błąd!",JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this,"Nie wybrano folderu do zrobienia listy!","Błąd!", JOptionPane.ERROR_MESSAGE);
             }
         });
         this.setVisible(true);
@@ -76,24 +84,6 @@ public class Main extends JFrame
 
     public void createFolderList()
     {
-        // Path temp = null;
-        // try 
-        // {
-        //     temp = Files.createTempFile("hello", ".txt");
-        //     System.out.println(temp);
-        // } catch (IOException e) {}
-        // try (FileWriter fileWriter = new FileWriter(temp.toFile())) 
-        // {
-        //     PrintWriter printWriter = new PrintWriter(fileWriter);
-        //     
-            
-        // } 
-        // catch (IOException e) 
-        // {
-        //     e.printStackTrace();
-        // }
-        // System.out.println(temp);
-    
         LinkedList<String> mainList = new LinkedList<>();
         LinkedList<LinkedList<File>> twoDimensionList = new LinkedList<>();
         
@@ -106,7 +96,6 @@ public class Main extends JFrame
             {
                 try
                 {
-                    //System.out.println(twoDimensionList.size());
                     if(twoDimensionList.getLast().size() == 0)
                     {
                         twoDimensionList.removeLast();
@@ -135,6 +124,42 @@ public class Main extends JFrame
                 
             }
             if(twoDimensionList.size() == 0) break;
+        }
+
+        Path temp = null;
+        try 
+        {
+            temp = Files.createTempFile("temp", ".txt");
+            System.out.println(temp);
+        } 
+        catch (IOException e) {}
+        try (FileWriter fileWriter = new FileWriter(temp.toFile())) 
+        {
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            for(String x : mainList)
+            {
+                printWriter.print(x + "\n");
+            }
+        } 
+        catch (IOException e) 
+        {}
+
+        JFileChooser x = new JFileChooser();
+        x.setDialogTitle("Zapisz plik");
+        x.setSelectedFile(new File(FileSystemView.getFileSystemView().getSystemDisplayName(this.choosenFolder) + ".txt"));
+        int flag = x.showSaveDialog(this);
+        if(flag == JFileChooser.APPROVE_OPTION)
+        {
+            File y = x.getSelectedFile();
+            System.out.print(y.getPath());
+            try 
+            {
+                Files.copy(temp, y.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
         }
     }
 
