@@ -6,10 +6,12 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
 public class View extends JPanel
@@ -34,6 +36,14 @@ public class View extends JPanel
     
     //
     JButton startButton;
+
+    //
+    JLabel chooseFilesToReadLabel;
+    JButton chooseFilesToReadButton;
+    JLabel chooseFilesToReadListLabel;
+    JScrollPane scrollChooseFilesToReadList;
+        JList<String> chooseFilesToReadList;
+    JButton generateButton;
     
     
     public View()
@@ -44,10 +54,12 @@ public class View extends JPanel
         //
         this.setTabbedModes();
         this.setChoosingFolder();
+        this.setReadingList();
 
         this.setVisible(true);
     }
 
+    //CREATE LIST 
     public void setTabbedModes()
     {
         //
@@ -154,8 +166,6 @@ public class View extends JPanel
         this.createListPanel.add(this.startButton);
     }
 
-
-    //
     public void updateChoosingFolderPathLabel(File newPath)
     {
         if(newPath == null) this.choosingFolderPathLabel.setText("\s\s\sBRAK");
@@ -172,5 +182,56 @@ public class View extends JPanel
     public void changeFontSize(Component comp, int newSize)
     {
         comp.setFont(comp.getFont().deriveFont((float) newSize));
+    }
+
+    //READ LIST
+    public void setReadingList()
+    {
+        //
+        this.chooseFilesToReadLabel = new JLabel("Wybierz pliki do wczytania:", JLabel.CENTER);
+        this.chooseFilesToReadLabel.setVisible(true);
+        this.chooseFilesToReadLabel.setAlignmentX(CENTER_ALIGNMENT);
+        this.changeFontSize(this.chooseFilesToReadLabel, 20);
+        this.chooseFilesToReadLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.chooseFilesToReadLabel.setMaximumSize(new Dimension(400, 50));
+
+        //
+        this.chooseFilesToReadButton = new JButton("Wybierz pliki");
+        this.changeFontSize(this.chooseFilesToReadButton, 15);
+        this.chooseFilesToReadButton.setMaximumSize(new Dimension(400, 50));
+        this.chooseFilesToReadButton.setAlignmentX(CENTER_ALIGNMENT);
+
+        //
+        this.chooseFilesToReadListLabel = new JLabel("Wybrane pliki:", JLabel.CENTER);
+        this.chooseFilesToReadListLabel.setVisible(true);
+        this.chooseFilesToReadListLabel.setAlignmentX(CENTER_ALIGNMENT);
+        this.changeFontSize(this.chooseFilesToReadListLabel, 20);
+        this.chooseFilesToReadListLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        this.chooseFilesToReadListLabel.setMaximumSize(new Dimension(400, 50));
+
+        //
+        this.chooseFilesToReadList = new JList<String>();
+        this.chooseFilesToReadList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        this.chooseFilesToReadList.setLayoutOrientation(JList.VERTICAL);
+        this.scrollChooseFilesToReadList = new JScrollPane(this.chooseFilesToReadList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.scrollChooseFilesToReadList.setMaximumSize(new Dimension(400, 150));
+
+        //
+        this.generateButton = new JButton("Generuj liste");
+        this.changeFontSize(this.generateButton, 15);
+        this.generateButton.setMaximumSize(new Dimension(400, 50));
+        this.generateButton.setAlignmentX(CENTER_ALIGNMENT);
+
+        //  
+        this.readListPanel.add(Box.createVerticalStrut(10));
+        this.readListPanel.add(this.chooseFilesToReadLabel);
+        this.readListPanel.add(Box.createVerticalStrut(10));
+        this.readListPanel.add(this.chooseFilesToReadButton);
+        this.readListPanel.add(Box.createVerticalStrut(10));
+        this.readListPanel.add(this.chooseFilesToReadListLabel);
+        this.readListPanel.add(Box.createVerticalStrut(10));
+        this.readListPanel.add(this.scrollChooseFilesToReadList);
+        this.readListPanel.add(Box.createVerticalStrut(10));
+        this.readListPanel.add(this.generateButton);
     }
 }
