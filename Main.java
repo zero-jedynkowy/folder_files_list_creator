@@ -117,7 +117,6 @@ public class Main extends JFrame
                 catch(Exception e)
                 {
                    //IF THE PROGRAMME CAN'T READ THE LIST OF THE FOLDER (PROBABLY DOESN'T HAVE ACCES TO IT) IT IS SKIPPED; ONLY THE FOLDER'S NAME IS SAVED
-                    System.out.println(twoDimensionList.getLast().getFirst());
                     twoDimensionList.getLast().removeFirst();
                 }
                 
