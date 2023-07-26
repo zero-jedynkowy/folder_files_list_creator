@@ -212,7 +212,7 @@ public class View extends JPanel
         this.chooseFilesToReadListLabel.setMaximumSize(new Dimension(400, 50));
 
         //
-        this.chooseFilesToReadList = new JList<String>();
+        this.chooseFilesToReadList = new JList<String>(new String[]{"BRAK"});
         this.chooseFilesToReadList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         this.chooseFilesToReadList.setLayoutOrientation(JList.VERTICAL);
         this.scrollChooseFilesToReadList = new JScrollPane(this.chooseFilesToReadList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

@@ -5,13 +5,12 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.LinkedList;
+import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -27,6 +26,7 @@ public class Main extends JFrame
     final static int HEIGHT = 500;
 
     File choosenFolder;
+    File choosenFiles[];
 
     public Main()
     {
@@ -38,6 +38,14 @@ public class Main extends JFrame
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        try 
+        {
+            UIManager.setLookAndFeel(
+            UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
+        {}
 
         //
         this.view = new View();
@@ -63,6 +71,8 @@ public class Main extends JFrame
                 JOptionPane.showMessageDialog(this,"Nie wybrano folderu do zrobienia listy!","Błąd!", JOptionPane.ERROR_MESSAGE);
             }
         });
+
+        this.view.chooseFilesToReadButton.addActionListener(e -> this.chooseFiles());
         this.setVisible(true);
     }
     
@@ -179,5 +189,28 @@ public class Main extends JFrame
         String x = "";
         for(int i=0; i<level; i++) x += "\t";
         return x;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void chooseFiles()
+    {
+        JFileChooser x = new JFileChooser("Wybierz pliki");
+        x.setMultiSelectionEnabled(true);
+        x.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        int flag = x.showOpenDialog(this);
+
+        DefaultListModel newModel = new DefaultListModel();
+        
+        if(flag == JFileChooser.APPROVE_OPTION)
+        {
+            this.choosenFiles = x.getSelectedFiles();
+            for(int i=0; i<this.choosenFiles.length; i++) newModel.addElement(this.choosenFiles[i].getPath());
+        }
+        else
+        {
+            this.choosenFiles = null;
+            newModel.addElement("BRAK");
+        }
+        this.view.chooseFilesToReadList.setModel(newModel);
     }
 }
