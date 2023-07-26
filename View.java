@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
@@ -107,6 +108,7 @@ public class View extends JPanel
         
         //
         this.statusLabel = new JLabel("Aktualny status: BRAK DZIAŁANIA", JLabel.CENTER);
+        this.statusLabel.setForeground(Color.RED);
         this.statusLabel.setVisible(true);
         this.statusLabel.setAlignmentX(CENTER_ALIGNMENT);
         this.changeFontSize(this.statusLabel, 20);
@@ -124,7 +126,7 @@ public class View extends JPanel
         //
         this.currectProcessObjectPathLabel = new JLabel("\s\s\sBRAK");
         this.scrollCurrectProcessObjectPath = new JScrollPane(this.currectProcessObjectPathLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        this.changeFontSize(this.choosingFolderPathLabel, 15);
+        this.changeFontSize(this.currectProcessObjectPathLabel, 15);
         this.changeFontSize(this.scrollCurrectProcessObjectPath, 15);
         this.currectProcessObjectPathLabel.setVisible(true);
         this.scrollCurrectProcessObjectPath.setMaximumSize(new Dimension(400, 50));

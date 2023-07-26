@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
@@ -48,9 +49,11 @@ public class Main extends JFrame
             if(this.choosenFolder != null) 
             {
                 this.view.statusLabel.setText("Aktualny status: DZIAŁANIE");
+                this.view.statusLabel.setForeground(Color.BLUE);
                 this.view.statusLabel.paintImmediately(this.view.statusLabel.getVisibleRect());
                 this.createFolderList();
                 this.view.statusLabel.setText("Aktualny status: BRAK DZIAŁANIA");
+                this.view.statusLabel.setForeground(Color.RED);
                 this.view.statusLabel.paintImmediately(this.view.statusLabel.getVisibleRect());
                 this.view.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
                 this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
@@ -146,11 +149,19 @@ public class Main extends JFrame
 
         JFileChooser x = new JFileChooser();
         x.setDialogTitle("Zapisz plik");
-        x.setSelectedFile(new File(FileSystemView.getFileSystemView().getSystemDisplayName(this.choosenFolder) + ".txt"));
+        String tempName = FileSystemView.getFileSystemView().getSystemDisplayName(this.choosenFolder);
+        
+        for(String z : new String[]{"<", ">", ":", "\"", "*", "?", "|", "\\", "/"})
+        {
+            tempName = tempName.replace(z, "");
+        }
+
+        x.setSelectedFile(new File(tempName + ".txt"));
         int flag = x.showSaveDialog(this);
         if(flag == JFileChooser.APPROVE_OPTION)
         {
             File y = x.getSelectedFile();
+            if(!y.getName().endsWith(".txt")) y = new File(x.getSelectedFile().getPath() + ".txt");
             System.out.print(y.getPath());
             try 
             {
