@@ -92,7 +92,7 @@ public class Main extends JFrame
         LinkedList<String> mainList = new LinkedList<>();
         LinkedList<LinkedList<File>> twoDimensionList = new LinkedList<>();
         
-        mainList.add(this.choosenFolder.getName());
+        //mainList.add(this.choosenFolder.getName());
         twoDimensionList.add(new LinkedList<File>(Arrays.asList(this.choosenFolder.listFiles())));
 
         while(true)
@@ -106,7 +106,7 @@ public class Main extends JFrame
                         twoDimensionList.removeLast();
                         break;
                     }
-                    mainList.add(newTabByLevel(twoDimensionList.size()) + twoDimensionList.getLast().getFirst().getName());
+                    mainList.add(newTabByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
                     this.view.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
                     this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
                     if(twoDimensionList.getLast().getFirst().isDirectory())
