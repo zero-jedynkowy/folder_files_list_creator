@@ -157,30 +157,35 @@ public class Main extends JFrame
         catch (IOException e) 
         {}
 
-        JFileChooser x = new JFileChooser();
-        x.setDialogTitle("Zapisz plik");
         String tempName = FileSystemView.getFileSystemView().getSystemDisplayName(this.choosenFolder);
         
         for(String z : new String[]{"<", ">", ":", "\"", "*", "?", "|", "\\", "/"})
         {
             tempName = tempName.replace(z, "");
         }
-
-        x.setSelectedFile(new File(tempName + ".txt"));
-        int flag = x.showSaveDialog(this);
-        if(flag == JFileChooser.APPROVE_OPTION)
+        JFileChooser x = new JFileChooser();
+        x.setDialogTitle("Zapisz plik");
+        
+        while(true)
         {
-            File y = x.getSelectedFile();
-            if(!y.getName().endsWith(".txt")) y = new File(x.getSelectedFile().getPath() + ".txt");
-            System.out.print(y.getPath());
-            try 
+            x.setSelectedFile(new File(tempName + ".txt"));
+            int flag = x.showSaveDialog(this);
+            if(flag == JFileChooser.APPROVE_OPTION)
             {
-                Files.copy(temp, y.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                File y = x.getSelectedFile();
+                if(!y.getName().endsWith(".txt")) y = new File(x.getSelectedFile().getPath() + ".txt");
+                try 
+                {
+                    if(y.getName().equals(".txt")) throw new Exception();
+                    Files.copy(temp, y.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    break;
+                }
+                catch (Exception e) 
+                {
+                    JOptionPane.showMessageDialog(this,"Nieprawidłowa nazwa pliku!","Błąd!", JOptionPane.ERROR_MESSAGE);
+                }
             }
-            catch (IOException e) 
-            {
-                e.printStackTrace();
-            }
+            else break;
         }
     }
 
