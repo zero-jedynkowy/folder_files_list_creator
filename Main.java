@@ -85,14 +85,20 @@ public class Main extends JFrame
     {
         JFileChooser x = new JFileChooser("Wybierz folder");
         x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        int flag = x.showOpenDialog(this);
-        if(flag == JFileChooser.APPROVE_OPTION)
+        while(true)
         {
-            this.choosenFolder = x.getSelectedFile();
-        }
-        else
-        {
-            this.choosenFolder = null;
+            int flag = x.showOpenDialog(this);
+            if(flag == JFileChooser.APPROVE_OPTION)
+            {
+                this.choosenFolder = x.getSelectedFile();
+                if(this.choosenFolder.listFiles() == null) JOptionPane.showMessageDialog(this,"Nie można odczytać zawartości wybranego folderu!","Błąd!", JOptionPane.ERROR_MESSAGE);
+                else break;
+            }
+            else
+            {
+                this.choosenFolder = null;
+                break;
+            }
         }
         this.view.updateChoosingFolderPathLabel(this.choosenFolder);
     }
