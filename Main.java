@@ -73,12 +73,22 @@ public class Main extends JFrame
         });
 
         this.view.chooseFilesToReadButton.addActionListener(e -> this.chooseFiles());
+        this.view.resetFilesToReadButton.addActionListener(e -> this.resetReadingList());
         this.setVisible(true);
     }
     
     public static void main(String args[])
     {
         new Main();
+    }
+
+    @SuppressWarnings("unchecked")
+    public void resetReadingList()
+    {
+        DefaultListModel newModel = new DefaultListModel();
+        this.choosenFiles = null;
+        newModel.addElement("BRAK");
+        this.view.chooseFilesToReadList.setModel(newModel);
     }
 
     public void chooseFolder()
