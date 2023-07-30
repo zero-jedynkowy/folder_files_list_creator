@@ -51,20 +51,20 @@ public class Main extends JFrame
         this.view = new View();
         this.add(this.view, BorderLayout.CENTER);
         
-        //
-        this.view.choosingFolderButton.addActionListener(e -> this.chooseFolder());
-        this.view.startButton.addActionListener(e -> {
+        
+        this.view.createListPanel.choosingFolderButton.addActionListener(e -> this.chooseFolder());
+        this.view.createListPanel.startButton.addActionListener(e -> {
             if(this.choosenFolder != null) 
             {
-                this.view.statusLabel.setText("Aktualny status: DZIAŁANIE");
-                this.view.statusLabel.setForeground(Color.BLUE);
-                this.view.statusLabel.paintImmediately(this.view.statusLabel.getVisibleRect());
+                this.view.createListPanel.statusLabel.setText("Aktualny status: DZIAŁANIE");
+                this.view.createListPanel.statusLabel.setForeground(Color.BLUE);
+                this.view.createListPanel.statusLabel.paintImmediately(this.view.createListPanel.statusLabel.getVisibleRect());
                 this.createFolderList();
-                this.view.statusLabel.setText("Aktualny status: BRAK DZIAŁANIA");
-                this.view.statusLabel.setForeground(Color.RED);
-                this.view.statusLabel.paintImmediately(this.view.statusLabel.getVisibleRect());
-                this.view.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
-                this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
+                this.view.createListPanel.statusLabel.setText("Aktualny status: BRAK DZIAŁANIA");
+                this.view.createListPanel.statusLabel.setForeground(Color.RED);
+                this.view.createListPanel.statusLabel.paintImmediately(this.view.createListPanel.statusLabel.getVisibleRect());
+                this.view.createListPanel.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
+                this.view.createListPanel.currectProcessObjectPathLabel.paintImmediately(this.view.createListPanel.currectProcessObjectPathLabel.getVisibleRect());
             }            
             else
             {
@@ -72,23 +72,14 @@ public class Main extends JFrame
             }
         });
 
-        this.view.chooseFilesToReadButton.addActionListener(e -> this.chooseFiles());
-        this.view.resetFilesToReadButton.addActionListener(e -> this.resetReadingList());
+        //this.view.chooseFilesToReadButton.addActionListener(e -> this.chooseFiles());
+        //this.view.resetFilesToReadButton.addActionListener(e -> this.resetReadingList());
         this.setVisible(true);
     }
     
     public static void main(String args[])
     {
         new Main();
-    }
-
-    @SuppressWarnings("unchecked")
-    public void resetReadingList()
-    {
-        DefaultListModel newModel = new DefaultListModel();
-        this.choosenFiles = null;
-        newModel.addElement("BRAK");
-        this.view.chooseFilesToReadList.setModel(newModel);
     }
 
     public void chooseFolder()
@@ -110,8 +101,21 @@ public class Main extends JFrame
                 break;
             }
         }
-        this.view.updateChoosingFolderPathLabel(this.choosenFolder);
+        this.view.createListPanel.updateChoosingFolderPathLabel(this.choosenFolder);
     }
+
+    //////////////////////////////
+
+    // @SuppressWarnings("unchecked")
+    // public void resetReadingList()
+    // {
+    //     DefaultListModel<String> newModel = new DefaultListModel();
+    //     this.choosenFiles = null;
+    //     newModel.addElement("BRAK");
+    //     this.view.chooseFilesToReadList.setModel(newModel);
+    // }
+
+    
 
     public void createFolderList()
     {
@@ -133,8 +137,8 @@ public class Main extends JFrame
                         break;
                     }
                     mainList.add(newTabByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
-                    this.view.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
-                    this.view.currectProcessObjectPathLabel.paintImmediately(this.view.currectProcessObjectPathLabel.getVisibleRect());
+                    this.view.createListPanel.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
+                    this.view.createListPanel.currectProcessObjectPathLabel.paintImmediately(this.view.createListPanel.currectProcessObjectPathLabel.getVisibleRect());
                     if(twoDimensionList.getLast().getFirst().isDirectory())
                     {
                         twoDimensionList.add(new LinkedList<File>(Arrays.asList(twoDimensionList.getLast().getFirst().listFiles())));
@@ -212,26 +216,26 @@ public class Main extends JFrame
         return x;
     }
 
-    @SuppressWarnings("unchecked")
-    public void chooseFiles()
-    {
-        JFileChooser x = new JFileChooser("Wybierz pliki");
-        x.setMultiSelectionEnabled(true);
-        x.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        int flag = x.showOpenDialog(this);
+    // @SuppressWarnings("unchecked")
+    // public void chooseFiles()
+    // {
+    //     JFileChooser x = new JFileChooser("Wybierz pliki");
+    //     x.setMultiSelectionEnabled(true);
+    //     x.setFileSelectionMode(JFileChooser.FILES_ONLY);
+    //     int flag = x.showOpenDialog(this);
 
-        DefaultListModel newModel = new DefaultListModel();
+    //     DefaultListModel newModel = new DefaultListModel();
         
-        if(flag == JFileChooser.APPROVE_OPTION)
-        {
-            this.choosenFiles = x.getSelectedFiles();
-            for(int i=0; i<this.choosenFiles.length; i++) newModel.addElement(this.choosenFiles[i].getPath());
-        }
-        else
-        {
-            this.choosenFiles = null;
-            newModel.addElement("BRAK");
-        }
-        this.view.chooseFilesToReadList.setModel(newModel);
-    }
+    //     if(flag == JFileChooser.APPROVE_OPTION)
+    //     {
+    //         this.choosenFiles = x.getSelectedFiles();
+    //         for(int i=0; i<this.choosenFiles.length; i++) newModel.addElement(this.choosenFiles[i].getPath());
+    //     }
+    //     else
+    //     {
+    //         this.choosenFiles = null;
+    //         newModel.addElement("BRAK");
+    //     }
+    //     this.view.chooseFilesToReadList.setModel(newModel);
+    // }
 }
