@@ -1,18 +1,34 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.LinkedList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileSystemView;
 
 public class Module1 extends DefaultPanelModeView
 {
+    public Module1(Main mainWindow) 
+    {
+        super(mainWindow);
+    }
+
     JLabel label_choosingFolder;
     JPanel panel_choosingFolderPath;
         JButton button_choosingFolder;
@@ -25,7 +41,10 @@ public class Module1 extends DefaultPanelModeView
             JLabel currectProcessObjectPathLabel;
             
            
-    JButton startButton;
+    JButton button_start;
+
+    File choosenFolder;
+    File choosenFiles[];
 
     @Override
     public void setView()
@@ -82,10 +101,10 @@ public class Module1 extends DefaultPanelModeView
         this.scrollPane_currectProcessObjectPathScroll.setMaximumSize(new Dimension(400, 50));
 
         //
-        this.startButton = new JButton("START");
-        DefaultPanelModeView.changeFontSize(this.startButton, 15);
-        this.startButton.setMaximumSize(new Dimension(400, 50));
-        this.startButton.setAlignmentX(CENTER_ALIGNMENT);
+        this.button_start = new JButton("START");
+        DefaultPanelModeView.changeFontSize(this.button_start, 15);
+        this.button_start.setMaximumSize(new Dimension(400, 50));
+        this.button_start.setAlignmentX(CENTER_ALIGNMENT);
     }
 
     @Override
@@ -118,12 +137,155 @@ public class Module1 extends DefaultPanelModeView
         z.setMaximumSize(new Dimension(450, 1));
         this.add(z);
         this.add(Box.createVerticalStrut(10));
-        this.add(this.startButton);
+        this.add(this.button_start);
     }
 
-    public void updateChoosingFolderPathLabel(File newPath)
+    @Override
+    public void setActions()
+    {
+        this.button_choosingFolder.addActionListener(e -> this.chooseFolder());
+        this.button_start.addActionListener(e -> this.startMakingList());
+    }
+
+    public void updateChoosedFolderPathLabel(File newPath)
     {
         if(newPath == null) this.label_choosingFolderPath.setText("\s\s\sBRAK");
         else this.label_choosingFolderPath.setText("   " + newPath.getPath() + "  ");
+    }
+
+    public void chooseFolder()
+    {
+        JFileChooser x = new JFileChooser("Wybierz folder");
+        x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        while(true)
+        {
+            int flag = x.showOpenDialog(this);
+            if(flag == JFileChooser.APPROVE_OPTION)
+            {
+                this.choosenFolder = x.getSelectedFile();
+                if(this.choosenFolder.listFiles() == null) JOptionPane.showMessageDialog(this,"Nie można odczytać zawartości wybranego folderu!","Błąd!", JOptionPane.ERROR_MESSAGE);
+                else break;
+            }
+            else
+            {
+                this.choosenFolder = null;
+                break;
+            }
+        }
+        this.updateChoosedFolderPathLabel(this.choosenFolder);
+    }
+
+    public void startMakingList()
+    {
+        System.out.println("ln");
+        if(this.choosenFolder != null) 
+        {
+            
+            this.label_status.setText("Aktualny status: DZIAŁANIE");
+            this.label_status.setForeground(Color.BLUE);
+            this.label_status.paintImmediately(this.label_status.getVisibleRect());
+            this.createList();
+            this.label_status.setText("Aktualny status: BRAK DZIAŁANIA");
+            this.label_status.setForeground(Color.RED);
+            this.label_status.paintImmediately(this.label_status.getVisibleRect());
+            this.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
+            this.currectProcessObjectPathLabel.paintImmediately(this.currectProcessObjectPathLabel.getVisibleRect());
+        }            
+        else
+        {
+            JOptionPane.showMessageDialog(this,"Nie wybrano folderu do zrobienia listy!","Błąd!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void createList()
+    {
+        LinkedList<String> mainList = new LinkedList<>();
+        LinkedList<LinkedList<File>> twoDimensionList = new LinkedList<>();
+        
+        //mainList.add(this.choosenFolder.getName());
+        twoDimensionList.add(new LinkedList<File>(Arrays.asList(this.choosenFolder.listFiles())));
+
+        while(true)
+        {
+            while(true)
+            {
+                try
+                {
+                    if(twoDimensionList.getLast().size() == 0)
+                    {
+                        twoDimensionList.removeLast();
+                        break;
+                    }
+                    mainList.add(Main.newTabCharacterByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
+                    this.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
+                    this.currectProcessObjectPathLabel.paintImmediately(this.currectProcessObjectPathLabel.getVisibleRect());
+                    if(twoDimensionList.getLast().getFirst().isDirectory())
+                    {
+                        twoDimensionList.add(new LinkedList<File>(Arrays.asList(twoDimensionList.getLast().getFirst().listFiles())));
+                        twoDimensionList.get(twoDimensionList.size() - 2).removeFirst();
+                    }
+                    else
+                    {
+                        twoDimensionList.getLast().removeFirst();
+                    }
+                }
+                catch(Exception e)
+                {
+                   //IF THE PROGRAMME CAN'T READ THE LIST OF THE FOLDER (PROBABLY DOESN'T HAVE ACCES TO IT) IT IS SKIPPED; ONLY THE FOLDER'S NAME IS SAVED
+                    twoDimensionList.getLast().removeFirst();
+                }
+                
+            }
+            if(twoDimensionList.size() == 0) break;
+        }
+
+        Path temp = null;
+        try 
+        {
+            temp = Files.createTempFile("temp", ".txt");
+            System.out.println(temp);
+        } 
+        catch (IOException e) {}
+        try (FileWriter fileWriter = new FileWriter(temp.toFile())) 
+        {
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            for(String x : mainList)
+            {
+                printWriter.print(x + "\n");
+            }
+        } 
+        catch (IOException e) 
+        {}
+
+        String tempName = FileSystemView.getFileSystemView().getSystemDisplayName(this.choosenFolder);
+        
+        for(String z : new String[]{"<", ">", ":", "\"", "*", "?", "|", "\\", "/"})
+        {
+            tempName = tempName.replace(z, "");
+        }
+        JFileChooser x = new JFileChooser();
+        x.setDialogTitle("Zapisz plik");
+        
+        while(true)
+        {
+            x.setSelectedFile(new File(tempName + ".txt"));
+            int flag = x.showSaveDialog(this);
+            if(flag == JFileChooser.APPROVE_OPTION)
+            {
+                File y = x.getSelectedFile();
+                if(!y.getName().endsWith(".txt")) y = new File(x.getSelectedFile().getPath() + ".txt");
+                try 
+                {
+                    if(y.getName().equals(".txt")) throw new Exception();
+                    Files.copy(temp, y.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    break;
+                }
+                catch (Exception e) 
+                {
+                    JOptionPane.showMessageDialog(this,"Nieprawidłowa nazwa pliku!","Błąd!", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+            else break;
+        }
     }
 }

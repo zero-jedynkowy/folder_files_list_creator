@@ -4,37 +4,27 @@ import javax.swing.JTabbedPane;
 
 public class View extends JPanel
 {
-    //
-    JTabbedPane tabbedModes;
-        Module1 createListPanel;
+    JTabbedPane tabbedModules;
+    
+    Module1 module1;
 
     public View()
     {
         super();
         this.setLayout(new BorderLayout());
-        
-        //
-        this.setTabbedModes();
-        this.createListPanel.setView();
-        this.createListPanel.addElements();
-        //this.setReadingList();
-
+        this.tabbedModules = new JTabbedPane();
+        this.setTabbedModules();
+        this.add(this.tabbedModules, BorderLayout.CENTER);
+        DefaultPanelModeView.changeFontSize(this.tabbedModules, 15);
+        this.tabbedModules.setVisible(true);
         this.setVisible(true);
     }
 
-    //CREATE LIST 
-    public void setTabbedModes()
+    public void setTabbedModules()
     {
-        //
-        this.tabbedModes = new JTabbedPane();
-        this.createListPanel = new Module1();
-        
-        //
-        this.tabbedModes.addTab("Tworzenie listy", this.createListPanel);
-        this.add(this.tabbedModes, BorderLayout.CENTER);
-        
-        //
-        DefaultPanelModeView.changeFontSize(this.tabbedModes, 15);
-        this.tabbedModes.setVisible(true);
+        //MODULE 1
+        this.module1 = new Module1((Main)this.getParent());
+        this.module1.init();
+        this.tabbedModules.addTab("Tworzenie listy", this.module1);
     }
 }
