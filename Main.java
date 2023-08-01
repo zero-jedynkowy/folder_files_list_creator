@@ -10,7 +10,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.LinkedList;
-import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -20,17 +19,18 @@ import javax.swing.filechooser.FileSystemView;
 
 public class Main extends JFrame
 {
-    View view;
-
     final static int WIDTH = 500;
     final static int HEIGHT = 500;
 
     File choosenFolder;
     File choosenFiles[];
 
+    View view;
+
     public Main()
     {
         super();
+        
         this.setTitle("Lista plików");
         this.setLayout(new BorderLayout());
         this.setSize(WIDTH, HEIGHT);
@@ -39,30 +39,22 @@ public class Main extends JFrame
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        try 
-        {
-            UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
-        {}
-
-        //
+        this.setSystemLook();
         this.view = new View();
         this.add(this.view, BorderLayout.CENTER);
         
         
-        this.view.createListPanel.choosingFolderButton.addActionListener(e -> this.chooseFolder());
+        this.view.createListPanel.button_choosingFolder.addActionListener(e -> this.chooseFolder());
         this.view.createListPanel.startButton.addActionListener(e -> {
             if(this.choosenFolder != null) 
             {
-                this.view.createListPanel.statusLabel.setText("Aktualny status: DZIAŁANIE");
-                this.view.createListPanel.statusLabel.setForeground(Color.BLUE);
-                this.view.createListPanel.statusLabel.paintImmediately(this.view.createListPanel.statusLabel.getVisibleRect());
+                this.view.createListPanel.label_status.setText("Aktualny status: DZIAŁANIE");
+                this.view.createListPanel.label_status.setForeground(Color.BLUE);
+                this.view.createListPanel.label_status.paintImmediately(this.view.createListPanel.label_status.getVisibleRect());
                 this.createFolderList();
-                this.view.createListPanel.statusLabel.setText("Aktualny status: BRAK DZIAŁANIA");
-                this.view.createListPanel.statusLabel.setForeground(Color.RED);
-                this.view.createListPanel.statusLabel.paintImmediately(this.view.createListPanel.statusLabel.getVisibleRect());
+                this.view.createListPanel.label_status.setText("Aktualny status: BRAK DZIAŁANIA");
+                this.view.createListPanel.label_status.setForeground(Color.RED);
+                this.view.createListPanel.label_status.paintImmediately(this.view.createListPanel.label_status.getVisibleRect());
                 this.view.createListPanel.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
                 this.view.createListPanel.currectProcessObjectPathLabel.paintImmediately(this.view.createListPanel.currectProcessObjectPathLabel.getVisibleRect());
             }            
@@ -77,10 +69,9 @@ public class Main extends JFrame
         this.setVisible(true);
     }
     
-    public static void main(String args[])
-    {
-        new Main();
-    }
+    
+
+    
 
     public void chooseFolder()
     {
@@ -104,19 +95,6 @@ public class Main extends JFrame
         this.view.createListPanel.updateChoosingFolderPathLabel(this.choosenFolder);
     }
 
-    //////////////////////////////
-
-    // @SuppressWarnings("unchecked")
-    // public void resetReadingList()
-    // {
-    //     DefaultListModel<String> newModel = new DefaultListModel();
-    //     this.choosenFiles = null;
-    //     newModel.addElement("BRAK");
-    //     this.view.chooseFilesToReadList.setModel(newModel);
-    // }
-
-    
-
     public void createFolderList()
     {
         LinkedList<String> mainList = new LinkedList<>();
@@ -136,7 +114,7 @@ public class Main extends JFrame
                         twoDimensionList.removeLast();
                         break;
                     }
-                    mainList.add(newTabByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
+                    mainList.add(newTabCharacterByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
                     this.view.createListPanel.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
                     this.view.createListPanel.currectProcessObjectPathLabel.paintImmediately(this.view.createListPanel.currectProcessObjectPathLabel.getVisibleRect());
                     if(twoDimensionList.getLast().getFirst().isDirectory())
@@ -209,33 +187,29 @@ public class Main extends JFrame
         }
     }
 
-    public String newTabByLevel(int level)
+
+    public static void main(String args[])
+    {
+        new Main();
+    }
+
+    public String newTabCharacterByLevel(int level)
     {
         String x = "";
         for(int i=0; i<level; i++) x += "\t";
         return x;
     }
 
-    // @SuppressWarnings("unchecked")
-    // public void chooseFiles()
-    // {
-    //     JFileChooser x = new JFileChooser("Wybierz pliki");
-    //     x.setMultiSelectionEnabled(true);
-    //     x.setFileSelectionMode(JFileChooser.FILES_ONLY);
-    //     int flag = x.showOpenDialog(this);
-
-    //     DefaultListModel newModel = new DefaultListModel();
-        
-    //     if(flag == JFileChooser.APPROVE_OPTION)
-    //     {
-    //         this.choosenFiles = x.getSelectedFiles();
-    //         for(int i=0; i<this.choosenFiles.length; i++) newModel.addElement(this.choosenFiles[i].getPath());
-    //     }
-    //     else
-    //     {
-    //         this.choosenFiles = null;
-    //         newModel.addElement("BRAK");
-    //     }
-    //     this.view.chooseFilesToReadList.setModel(newModel);
-    // }
+    public void setSystemLook()
+    {
+        try 
+        {
+            UIManager.setLookAndFeel(
+            UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
+        {
+            //
+        }
+    }
 }
