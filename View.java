@@ -7,6 +7,7 @@ public class View extends JPanel
     JTabbedPane tabbedModules;
     
     Module1 module1;
+    Module2 module2;
 
     public View()
     {
@@ -26,5 +27,10 @@ public class View extends JPanel
         this.module1 = new Module1((Main)this.getParent());
         this.module1.init();
         this.tabbedModules.addTab("Tworzenie listy", this.module1);
+
+        //MODULE 2
+        this.module2 = new Module2((Main)this.getParent());
+        this.module2.init();
+        this.tabbedModules.addTab("Wyświetlenie list", this.module2);
     }
 }
