@@ -1,18 +1,22 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 
@@ -32,10 +36,19 @@ public class Module2 extends DefaultPanelModeView
             JButton button_reset;
     JButton button_generateList;
 
+    JFrame frame_newWindow;
+        JPanel panel_newWindowContent;
+            JPanel panel_searchSection;
+                JLabel label_searchLabel;
+                JTextField textField_searchField;
+                JButton button_plusSize;
+                JButton button_minusSize;
+            JPanel panel_results;
 
     LinkedList<File> addedFiles;
 
-    public Module2(Main mainWindow) {
+    public Module2(Main mainWindow) 
+    {
         super(mainWindow);
         this.addedFiles = new LinkedList<File>();
     }
@@ -85,8 +98,73 @@ public class Module2 extends DefaultPanelModeView
         DefaultPanelModeView.changeFontSize(this.button_generateList, 15);
         this.button_generateList.setMaximumSize(new Dimension(400, 50));
         this.button_generateList.setAlignmentX(CENTER_ALIGNMENT);
-    }
 
+        this.frame_newWindow = new JFrame("Wynik");
+        this.frame_newWindow.setMinimumSize(new Dimension(Main.WIDTH, Main.HEIGHT));
+        this.frame_newWindow.setSize(new Dimension(Main.WIDTH, Main.HEIGHT));
+        this.frame_newWindow.setResizable(true);
+        this.frame_newWindow.setLayout(new BorderLayout());
+        
+        this.panel_newWindowContent = new JPanel();
+        this.panel_newWindowContent.setLayout(new BoxLayout(this.panel_newWindowContent, BoxLayout.Y_AXIS));
+        this.frame_newWindow.add(this.panel_newWindowContent, BorderLayout.CENTER);
+
+
+        this.panel_searchSection = new JPanel();
+        this.panel_searchSection.setLayout(new BoxLayout(this.panel_searchSection, BoxLayout.X_AXIS));
+        this.panel_searchSection.setMaximumSize(new Dimension(400, 50));
+        
+        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
+        this.panel_newWindowContent.add(this.panel_searchSection);
+
+        this.label_searchLabel = new JLabel("Szukaj: ", JLabel.CENTER);
+        DefaultPanelModeView.changeFontSize(this.label_searchLabel, 20);
+        this.label_searchLabel.setMaximumSize(new Dimension(75, 100));
+
+        this.textField_searchField = new JTextField();
+        this.textField_searchField.setMaximumSize(new Dimension(300, 100));
+        DefaultPanelModeView.changeFontSize(this.textField_searchField, 20);
+
+
+        this.button_plusSize = new JButton("+");
+        this.button_plusSize.setMaximumSize(new Dimension(50, 50));
+        DefaultPanelModeView.changeFontSize(this.button_plusSize, 20);
+
+
+        this.button_minusSize = new JButton("-");
+        this.button_minusSize.setMaximumSize(new Dimension(50, 50));
+        DefaultPanelModeView.changeFontSize(this.button_minusSize, 20);
+
+        this.panel_results = new JPanel();
+        this.panel_results.setMaximumSize(new Dimension(450, 400));
+        this.panel_results.setBorder(BorderFactory.createEtchedBorder(Color.BLACK, Color.BLACK));
+
+        this.panel_searchSection.add(Box.createHorizontalStrut(10));
+        this.panel_searchSection.add(this.label_searchLabel);
+        this.panel_searchSection.add(Box.createHorizontalStrut(10));
+        this.panel_searchSection.add(this.textField_searchField);
+        this.panel_searchSection.add(Box.createHorizontalStrut(10));
+        this.panel_searchSection.add(this.button_plusSize);
+        this.panel_searchSection.add(Box.createHorizontalStrut(10));
+        this.panel_searchSection.add(this.button_minusSize);
+        this.panel_searchSection.add(Box.createHorizontalStrut(10));
+
+        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
+        this.panel_newWindowContent.add(this.panel_results);
+        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
+        
+    }
+// this.panel_searchSection.add(Box.createHorizontalStrut(10));
+    // JFrame frame_newWindow;
+    //     JPanel panel_newWindowContent;
+    //         JPanel panel_searchSection;
+    //             JLabel label_searchLabel;
+    //             JTextField textField_searchField;
+    //             JButton button_plusSize;
+    //             JButton button_minusSize;
+    //         JPanel panel_results;
+        
+           
     @Override
     public void addElements() 
     {
@@ -116,6 +194,7 @@ public class Module2 extends DefaultPanelModeView
         this.button_removeFiles.addActionListener(e -> this.removeFiles());
         this.button_addFolder.addActionListener(e -> this.addFolder());
         this.button_reset.addActionListener(e -> this.reset());
+        this.button_generateList.addActionListener(e -> this.generate());
     }
     
     @SuppressWarnings("unchecked")
@@ -141,21 +220,6 @@ public class Module2 extends DefaultPanelModeView
             }
             this.list_choosenFilesToReadList.setModel(newModel);
         }
-
-
-        // DefaultListModel newModel = new DefaultListModel();
-        
-        // if(flag == JFileChooser.APPROVE_OPTION)
-        // {
-        //     this.addedFiles = x.getSelectedFiles();
-        //     for(int i=0; i<this.addedFiles.length; i++) newModel.addElement(this.addedFiles[i].getPath());
-        // }
-        // else
-        // {
-        //     this.addedFiles = null;
-        //     newModel.addElement("BRAK");
-        // }
-        // this.list_choosenFilesToReadList.setModel(newModel);
     }
 
     public void addFolder()
@@ -211,5 +275,11 @@ public class Module2 extends DefaultPanelModeView
     {
         DefaultListModel newModel = new DefaultListModel();
         this.list_choosenFilesToReadList.setModel(newModel);
+    }
+
+    public void generate()
+    {
+        this.frame_newWindow.setLocationRelativeTo(null);
+        this.frame_newWindow.setVisible(true);
     }
 }
