@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.io.File;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -31,11 +33,11 @@ public class Module2 extends DefaultPanelModeView
     JButton button_generateList;
 
 
-    File addedFiles[];
+    LinkedList<File> addedFiles;
 
     public Module2(Main mainWindow) {
         super(mainWindow);
-        //TODO Auto-generated constructor stub
+        this.addedFiles = new LinkedList<File>();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class Module2 extends DefaultPanelModeView
             this.panel_mainLeftCenterPanel = new JPanel();
             this.panel_mainLeftCenterPanel.setLayout(new BorderLayout());
             this.panel_mainLeftCenterPanel.setMaximumSize(new Dimension(300, 200));
-                this.list_choosenFilesToReadList = new JList<String>(new String[]{"BRAK"});
+                this.list_choosenFilesToReadList = new JList<String>();
                 this.list_choosenFilesToReadList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
                 this.list_choosenFilesToReadList.setLayoutOrientation(JList.VERTICAL);
                 this.scroll_choosenFilesToReadList = new JScrollPane(this.list_choosenFilesToReadList, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -110,30 +112,104 @@ public class Module2 extends DefaultPanelModeView
     @Override
     public void setActions() 
     {
-        this.button_addFile.addActionListener(e -> this.addFiles());
+        this.button_addFile.addActionListener(e -> this.addFile());
+        this.button_removeFiles.addActionListener(e -> this.removeFiles());
+        this.button_addFolder.addActionListener(e -> this.addFolder());
+        this.button_reset.addActionListener(e -> this.reset());
     }
     
     @SuppressWarnings("unchecked")
-    public void addFiles()
+    public void addFile()
     {
         JFileChooser x = new JFileChooser("Wybierz pliki");
         x.setMultiSelectionEnabled(true);
         x.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int flag = x.showOpenDialog(this);
 
-        DefaultListModel newModel = new DefaultListModel();
-        
         if(flag == JFileChooser.APPROVE_OPTION)
         {
-            this.addedFiles = x.getSelectedFiles();
-            for(int i=0; i<this.addedFiles.length; i++) newModel.addElement(this.addedFiles[i].getPath());
+            File tempList[] = x.getSelectedFiles();
+            for(File y : tempList)
+            {
+                if(y.getPath().endsWith(".txt") && !this.addedFiles.contains(y)) this.addedFiles.add(y);
+            }
+            Iterator<File> z = this.addedFiles.iterator(); 
+            DefaultListModel newModel = new DefaultListModel();
+            while(z.hasNext())
+            {
+                newModel.addElement(z.next().getPath());
+            }
+            this.list_choosenFilesToReadList.setModel(newModel);
         }
-        else
+
+
+        // DefaultListModel newModel = new DefaultListModel();
+        
+        // if(flag == JFileChooser.APPROVE_OPTION)
+        // {
+        //     this.addedFiles = x.getSelectedFiles();
+        //     for(int i=0; i<this.addedFiles.length; i++) newModel.addElement(this.addedFiles[i].getPath());
+        // }
+        // else
+        // {
+        //     this.addedFiles = null;
+        //     newModel.addElement("BRAK");
+        // }
+        // this.list_choosenFilesToReadList.setModel(newModel);
+    }
+
+    public void addFolder()
+    {
+        JFileChooser x = new JFileChooser("Wybierz foldery");
+        x.setMultiSelectionEnabled(true);
+        x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int flag = x.showOpenDialog(this);
+
+        if(flag == JFileChooser.APPROVE_OPTION)
         {
-            this.addedFiles = null;
-            newModel.addElement("BRAK");
+            File tempList[] = x.getSelectedFiles();
+            for(File y : tempList)
+            {
+                if(y.isDirectory())
+                {
+                    for(File z : y.listFiles())
+                    {
+                        if(!this.addedFiles.contains(z) && !z.isDirectory() && z.getPath().endsWith(".txt")) this.addedFiles.add(z);
+                    }
+                }
+            }
+            Iterator<File> z = this.addedFiles.iterator(); 
+            DefaultListModel newModel = new DefaultListModel();
+            while(z.hasNext())
+            {
+                newModel.addElement(z.next().getPath());
+            }
+            this.list_choosenFilesToReadList.setModel(newModel);
+        }
+
+    }
+
+    public void removeFiles()
+    {
+        for(String x : this.list_choosenFilesToReadList.getSelectedValuesList())
+        {
+            for(File y : this.addedFiles)
+            {
+                if(y.getPath().equals(x)) this.addedFiles.remove(y);
+            }
+        }
+        Iterator<File> z = this.addedFiles.iterator(); 
+        DefaultListModel newModel = new DefaultListModel();
+        while(z.hasNext())
+        {
+            newModel.addElement(z.next().getPath());
         }
         this.list_choosenFilesToReadList.setModel(newModel);
     }
 
+    public void reset()
+    {
+        DefaultListModel newModel = new DefaultListModel();
+        this.list_choosenFilesToReadList.setModel(newModel);
+    }
 }
