@@ -113,19 +113,14 @@ public class Module2 extends DefaultPanelModeView
         this.frame_newWindow.setSize(new Dimension(Main.WIDTH, Main.HEIGHT));
         this.frame_newWindow.setResizable(true);
         this.frame_newWindow.setLayout(new BorderLayout());
-        
+
         this.panel_newWindowContent = new JPanel();
         this.panel_newWindowContent.setLayout(new BoxLayout(this.panel_newWindowContent, BoxLayout.Y_AXIS));
-        this.frame_newWindow.add(this.panel_newWindowContent, BorderLayout.CENTER);
-
 
         this.panel_searchSection = new JPanel();
         this.panel_searchSection.setLayout(new BoxLayout(this.panel_searchSection, BoxLayout.X_AXIS));
         this.panel_searchSection.setMaximumSize(new Dimension(800, 50));
         
-        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
-        this.panel_newWindowContent.add(this.panel_searchSection);
-
         this.label_searchLabel = new JLabel("Szukaj: ", JLabel.CENTER);
         DefaultPanelModeView.changeFontSize(this.label_searchLabel, 20);
         this.label_searchLabel.setMaximumSize(new Dimension(75, 100));
@@ -134,11 +129,9 @@ public class Module2 extends DefaultPanelModeView
         this.textField_searchField.setMaximumSize(new Dimension(300, 100));
         DefaultPanelModeView.changeFontSize(this.textField_searchField, 20);
 
-
         this.button_plusSize = new JButton("+");
         this.button_plusSize.setMaximumSize(new Dimension(50, 50));
         DefaultPanelModeView.changeFontSize(this.button_plusSize, 20);
-
 
         this.button_minusSize = new JButton("-");
         this.button_minusSize.setMaximumSize(new Dimension(50, 50));
@@ -147,21 +140,6 @@ public class Module2 extends DefaultPanelModeView
         this.panel_results = new JPanel();
         this.panel_results.setMaximumSize(new Dimension(800, 400));
         this.panel_results.setBorder(BorderFactory.createEtchedBorder(Color.BLACK, Color.BLACK));
-
-        this.panel_searchSection.add(Box.createHorizontalStrut(10));
-        this.panel_searchSection.add(this.label_searchLabel);
-        this.panel_searchSection.add(Box.createHorizontalStrut(10));
-        this.panel_searchSection.add(this.textField_searchField);
-        this.panel_searchSection.add(Box.createHorizontalStrut(10));
-        this.panel_searchSection.add(this.button_plusSize);
-        this.panel_searchSection.add(Box.createHorizontalStrut(10));
-        this.panel_searchSection.add(this.button_minusSize);
-        this.panel_searchSection.add(Box.createHorizontalStrut(10));
-
-        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
-        this.panel_newWindowContent.add(this.panel_results);
-        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
-        
     }
 
     @Override
@@ -184,6 +162,22 @@ public class Module2 extends DefaultPanelModeView
                 this.panel_mainRightCenterPanel.add(this.button_reset);
         this.add(Box.createVerticalStrut(10));
         this.add(this.button_generateList);
+
+        this.frame_newWindow.add(this.panel_newWindowContent, BorderLayout.CENTER);
+            this.panel_newWindowContent.add(Box.createVerticalStrut(10));
+            this.panel_newWindowContent.add(this.panel_searchSection);
+                this.panel_searchSection.add(Box.createHorizontalStrut(10));
+                this.panel_searchSection.add(this.label_searchLabel);
+                this.panel_searchSection.add(Box.createHorizontalStrut(10));
+                this.panel_searchSection.add(this.textField_searchField);
+                this.panel_searchSection.add(Box.createHorizontalStrut(10));
+                this.panel_searchSection.add(this.button_plusSize);
+                this.panel_searchSection.add(Box.createHorizontalStrut(10));
+                this.panel_searchSection.add(this.button_minusSize);
+                this.panel_searchSection.add(Box.createHorizontalStrut(10));
+        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
+        this.panel_newWindowContent.add(this.panel_results);
+        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
     }
 
     @Override
@@ -356,5 +350,3 @@ public class Module2 extends DefaultPanelModeView
         return new JTree(mainTree);
     }
 }
-
-// x.startsWith(Main.newTabCharacterByLevel(level)) == true
