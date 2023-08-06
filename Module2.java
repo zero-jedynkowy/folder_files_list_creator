@@ -21,6 +21,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -52,9 +53,11 @@ public class Module2 extends DefaultPanelModeView
                 JTextField textField_searchField;
                 JButton button_plusSize;
                 JButton button_minusSize;
-            JPanel panel_results;
+            JScrollPane panel_results;
 
     LinkedList<File> addedFiles;
+    JTree originalTree;
+    DefaultMutableTreeNode originalNode;
 
     public Module2(Main mainWindow) 
     {
@@ -119,11 +122,12 @@ public class Module2 extends DefaultPanelModeView
 
         this.panel_searchSection = new JPanel();
         this.panel_searchSection.setLayout(new BoxLayout(this.panel_searchSection, BoxLayout.X_AXIS));
-        this.panel_searchSection.setMaximumSize(new Dimension(800, 50));
+        this.panel_searchSection.setMaximumSize(new Dimension(400, 50));
+        this.panel_searchSection.setAlignmentX(CENTER_ALIGNMENT);
         
         this.label_searchLabel = new JLabel("Szukaj: ", JLabel.CENTER);
         DefaultPanelModeView.changeFontSize(this.label_searchLabel, 20);
-        this.label_searchLabel.setMaximumSize(new Dimension(75, 100));
+        this.label_searchLabel.setMaximumSize(new Dimension(200, 100));
 
         this.textField_searchField = new JTextField();
         this.textField_searchField.setMaximumSize(new Dimension(300, 100));
@@ -137,8 +141,8 @@ public class Module2 extends DefaultPanelModeView
         this.button_minusSize.setMaximumSize(new Dimension(50, 50));
         DefaultPanelModeView.changeFontSize(this.button_minusSize, 20);
 
-        this.panel_results = new JPanel();
-        this.panel_results.setMaximumSize(new Dimension(800, 400));
+        this.panel_results = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.panel_results.setMaximumSize(new Dimension(400, 400));
         this.panel_results.setBorder(BorderFactory.createEtchedBorder(Color.BLACK, Color.BLACK));
     }
 
@@ -273,19 +277,29 @@ public class Module2 extends DefaultPanelModeView
 
     public void generate()
     {
-        this.frame_newWindow.setLocationRelativeTo(null);
-        this.panel_results.add(this.createList(this.addedFiles.get(0)));
-        this.frame_newWindow.setVisible(true);
+        if(this.addedFiles.size() == 0 || this.addedFiles == null) 
+        {
+            JOptionPane.showMessageDialog(this,"Nie wybrano żadnego pliku/listy","Błąd!", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            this.frame_newWindow.setLocationRelativeTo(null);
+            this.originalNode = new DefaultMutableTreeNode();
+            for(File x : this.addedFiles) this.originalNode.add(this.createList(x));
+            this.originalTree = new JTree(this.originalNode);
+            DefaultPanelModeView.changeFontSize(this.originalTree, 20);
+            this.panel_results.setViewportView(this.originalTree);
+            this.frame_newWindow.setVisible(true);
+        }
     }
 
-    public JTree createList(File file)
+    public DefaultMutableTreeNode createList(File file)
     {
         LinkedList<Integer> countTabs = new LinkedList<>();
         DefaultMutableTreeNode mainTree = new DefaultMutableTreeNode(file.getName().replace(".txt", ""));
         int counter = 1;
         try 
         {
-            //java.util.List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
             LinkedList<String> lines = new LinkedList<>();
             
             for(String x : Files.readAllLines(file.toPath(), StandardCharsets.UTF_8))
@@ -318,8 +332,6 @@ public class Module2 extends DefaultPanelModeView
             DefaultMutableTreeNode lastTreeNode = mainTree;
             for(int i=0; i<countTabs.size(); i++)
             {
-                System.out.print(i);
-                System.out.println(lines.get(i));
                 if(countTabs.get(i) == level)
                 {
                     DefaultMutableTreeNode newTree = new DefaultMutableTreeNode(lines.get(i));
@@ -347,6 +359,6 @@ public class Module2 extends DefaultPanelModeView
         {
             e.printStackTrace();
         }
-        return new JTree(mainTree);
+        return mainTree;
     }
 }

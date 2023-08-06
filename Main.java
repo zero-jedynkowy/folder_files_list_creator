@@ -66,7 +66,7 @@ public class Main extends JFrame
         } 
         catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
         {
-            //
+            JOptionPane.showMessageDialog(this,"Nie można załadować motywu systemu","Błąd!", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
