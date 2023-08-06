@@ -1,7 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.List;
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -17,8 +24,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 public class Module2 extends DefaultPanelModeView
 {
@@ -112,7 +121,7 @@ public class Module2 extends DefaultPanelModeView
 
         this.panel_searchSection = new JPanel();
         this.panel_searchSection.setLayout(new BoxLayout(this.panel_searchSection, BoxLayout.X_AXIS));
-        this.panel_searchSection.setMaximumSize(new Dimension(400, 50));
+        this.panel_searchSection.setMaximumSize(new Dimension(800, 50));
         
         this.panel_newWindowContent.add(Box.createVerticalStrut(10));
         this.panel_newWindowContent.add(this.panel_searchSection);
@@ -136,7 +145,7 @@ public class Module2 extends DefaultPanelModeView
         DefaultPanelModeView.changeFontSize(this.button_minusSize, 20);
 
         this.panel_results = new JPanel();
-        this.panel_results.setMaximumSize(new Dimension(450, 400));
+        this.panel_results.setMaximumSize(new Dimension(800, 400));
         this.panel_results.setBorder(BorderFactory.createEtchedBorder(Color.BLACK, Color.BLACK));
 
         this.panel_searchSection.add(Box.createHorizontalStrut(10));
@@ -154,17 +163,7 @@ public class Module2 extends DefaultPanelModeView
         this.panel_newWindowContent.add(Box.createVerticalStrut(10));
         
     }
-// this.panel_searchSection.add(Box.createHorizontalStrut(10));
-    // JFrame frame_newWindow;
-    //     JPanel panel_newWindowContent;
-    //         JPanel panel_searchSection;
-    //             JLabel label_searchLabel;
-    //             JTextField textField_searchField;
-    //             JButton button_plusSize;
-    //             JButton button_minusSize;
-    //         JPanel panel_results;
-        
-           
+
     @Override
     public void addElements() 
     {
@@ -273,6 +272,7 @@ public class Module2 extends DefaultPanelModeView
 
     public void reset()
     {
+        this.addedFiles.removeAll(addedFiles);
         DefaultListModel newModel = new DefaultListModel();
         this.list_choosenFilesToReadList.setModel(newModel);
     }
@@ -280,6 +280,81 @@ public class Module2 extends DefaultPanelModeView
     public void generate()
     {
         this.frame_newWindow.setLocationRelativeTo(null);
+        this.panel_results.add(this.createList(this.addedFiles.get(0)));
         this.frame_newWindow.setVisible(true);
     }
+
+    public JTree createList(File file)
+    {
+        LinkedList<Integer> countTabs = new LinkedList<>();
+        DefaultMutableTreeNode mainTree = new DefaultMutableTreeNode(file.getName().replace(".txt", ""));
+        int counter = 1;
+        try 
+        {
+            //java.util.List<String> lines = Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
+            LinkedList<String> lines = new LinkedList<>();
+            
+            for(String x : Files.readAllLines(file.toPath(), StandardCharsets.UTF_8))
+            {
+                lines.add(x);
+            }
+
+            for(int i=0; i<lines.size(); i++)
+            {
+                counter = 1;
+                while(true)
+                {
+                    if(lines.get(i).startsWith(Main.newTabCharacterByLevel(counter)) == true) counter += 1;
+                    else if(counter == 1)
+                    {
+                        countTabs.add(0);
+                        break;
+                    }
+                    else
+                    {
+                        countTabs.add(counter - 1);
+                        lines.set(i, lines.get(i).replace(Main.newTabCharacterByLevel(counter), ""));
+                        break;
+                    }   
+                }
+            }
+            LinkedList<DefaultMutableTreeNode> loweringList = new LinkedList<>();
+            int level = 0;
+            loweringList.add(mainTree);
+            DefaultMutableTreeNode lastTreeNode = mainTree;
+            for(int i=0; i<countTabs.size(); i++)
+            {
+                System.out.print(i);
+                System.out.println(lines.get(i));
+                if(countTabs.get(i) == level)
+                {
+                    DefaultMutableTreeNode newTree = new DefaultMutableTreeNode(lines.get(i));
+                    loweringList.getLast().add(newTree);
+                    lastTreeNode = newTree;
+                }
+                else if(countTabs.get(i) > level)
+                {
+                    loweringList.add(lastTreeNode);
+                    lastTreeNode = new DefaultMutableTreeNode(lines.get(i));
+                    loweringList.getLast().add(lastTreeNode);
+                    level++;
+                }
+                else
+                {
+                    for(int x=0; x<level-countTabs.get(i); x++) loweringList.removeLast();
+                    level = countTabs.get(i);
+                    lastTreeNode = new DefaultMutableTreeNode(lines.get(i));
+                    loweringList.getLast().add(lastTreeNode);
+                }
+            }
+            
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+        return new JTree(mainTree);
+    }
 }
+
+// x.startsWith(Main.newTabCharacterByLevel(level)) == true
