@@ -8,6 +8,7 @@ public class View extends JPanel
     
     Module1 module1;
     Module2 module2;
+    Module3 module3;
 
     public View()
     {
@@ -32,5 +33,10 @@ public class View extends JPanel
         this.module2 = new Module2((Main)this.getParent());
         this.module2.init();
         this.tabbedModules.addTab("Wyświetlenie list", this.module2);
+
+        //MODULE 3
+        this.module3 = new Module3((Main)this.getParent());
+        this.module3.init();
+        this.tabbedModules.addTab("Ustawienia", this.module3);
     }
 }

@@ -1,21 +1,9 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.LinkedList;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.filechooser.FileSystemView;
 
 public class Main extends JFrame
 {
