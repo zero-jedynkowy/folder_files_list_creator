@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
@@ -14,44 +13,28 @@ import org.json.*;
 
 public class Main extends JFrame
 {
-    View view;
-    
     final static int WIDTH = 500;
     final static int HEIGHT = 500;
     Map<String, Integer> settings;
+    View view;
     
     public Main()
     {
         super();
         this.readSettings();
-        this.setTitle("Lista plików");
+        this.setTitle("File Lister");
         this.setLayout(new BorderLayout());
         this.setSize(WIDTH, HEIGHT);
         this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         this.setSystemLook(this.settings.get("style"));
-        this.view = new View();
+        this.view = new View(this.settings.get("language"));
         this.add(this.view, BorderLayout.CENTER);
-        
-        
-
         this.setVisible(true);
     }
     
-    public static void main(String args[])
-    {
-        new Main();
-    }
-
-    public static String newTabCharacterByLevel(int level)
-    {
-        String x = "";
-        for(int i=0; i<level; i++) x += "\t";
-        return x;
-    }
 
     public void setSystemLook(int mode)
     {
@@ -92,5 +75,10 @@ public class Main extends JFrame
         JSONObject temp = new JSONObject(data);
         this.settings.put("style", temp.getInt("style"));
         this.settings.put("language", temp.getInt("language"));
+    }
+
+    public static void main(String args[])
+    {
+        new Main();
     }
 }

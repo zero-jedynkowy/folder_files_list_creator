@@ -9,7 +9,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.LinkedList;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,11 +23,6 @@ import javax.swing.filechooser.FileSystemView;
 
 public class Module1 extends DefaultPanelModeView
 {
-    public Module1(Main mainWindow) 
-    {
-        super(mainWindow);
-    }
-
     JLabel label_choosingFolder;
     JPanel panel_choosingFolderPath;
         JButton button_choosingFolder;
@@ -39,12 +33,24 @@ public class Module1 extends DefaultPanelModeView
     JLabel label_currectProcessedObject;
         JScrollPane  scrollPane_currectProcessObjectPathScroll;
             JLabel currectProcessObjectPathLabel;
-            
-           
+         
+    JLabel label_filesCounterTitle;
+    JLabel label_filesCounter;
+
     JButton button_start;
 
     File choosenFolder;
     File choosenFiles[];
+ 
+    long filesCounter;
+
+    boolean startStopButtonFlag = false;
+    Thread myThread;
+
+    public Module1(Main mainWindow) 
+    {
+        super(mainWindow);
+    }
 
     @Override
     public void setView()
@@ -101,6 +107,23 @@ public class Module1 extends DefaultPanelModeView
         this.scrollPane_currectProcessObjectPathScroll.setMaximumSize(new Dimension(400, 50));
 
         //
+        this.label_filesCounterTitle = new JLabel("Liczba przetworzonych plików:", JLabel.CENTER);
+        this.label_filesCounterTitle.setVisible(true);
+        this.label_filesCounterTitle.setAlignmentX(CENTER_ALIGNMENT);
+        DefaultPanelModeView.changeFontSize(this.label_filesCounterTitle, 20);
+        this.label_filesCounterTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        this.label_filesCounterTitle.setPreferredSize(new Dimension(400, 50));
+
+        //
+        this.label_filesCounter = new JLabel("0", JLabel.CENTER);
+        this.label_filesCounter.setForeground(Color.BLUE);
+        this.label_filesCounter.setVisible(true);
+        this.label_filesCounter.setAlignmentX(CENTER_ALIGNMENT);
+        DefaultPanelModeView.changeFontSize(this.label_filesCounter, 20);
+        this.label_filesCounter.setHorizontalAlignment(SwingConstants.CENTER);
+        this.label_filesCounter.setPreferredSize(new Dimension(400, 50));
+
+        //
         this.button_start = new JButton("START");
         DefaultPanelModeView.changeFontSize(this.button_start, 15);
         this.button_start.setMaximumSize(new Dimension(400, 50));
@@ -136,6 +159,10 @@ public class Module1 extends DefaultPanelModeView
         JSeparator z = new JSeparator();
         z.setMaximumSize(new Dimension(450, 1));
         this.add(z);
+        this.add(Box.createVerticalStrut(10));
+        this.add(this.label_filesCounterTitle);
+        this.add(Box.createVerticalStrut(10));
+        this.add(this.label_filesCounter);
         this.add(Box.createVerticalStrut(10));
         this.add(this.button_start);
     }
@@ -177,23 +204,26 @@ public class Module1 extends DefaultPanelModeView
 
     public void startMakingList()
     {
-        System.out.println("ln");
-        if(this.choosenFolder != null) 
+        this.startStopButtonFlag = !this.startStopButtonFlag;
+        if(this.choosenFolder != null && this.startStopButtonFlag) 
         {
-            
+            this.startStopButtonFlag = true;
+            this.button_start.setText("STOP");
             this.label_status.setText("Aktualny status: DZIAŁANIE");
             this.label_status.setForeground(Color.BLUE);
             this.label_status.paintImmediately(this.label_status.getVisibleRect());
-            this.createList();
+            this.myThread = new Thread(this::createList);
+            this.myThread.start();
             this.label_status.setText("Aktualny status: BRAK DZIAŁANIA");
             this.label_status.setForeground(Color.RED);
             this.label_status.paintImmediately(this.label_status.getVisibleRect());
             this.currectProcessObjectPathLabel.setText("\s\s\sBRAK");
             this.currectProcessObjectPathLabel.paintImmediately(this.currectProcessObjectPathLabel.getVisibleRect());
-        }            
-        else
+        }        
+        else if(this.choosenFolder == null)
         {
             JOptionPane.showMessageDialog(this,"Nie wybrano folderu do zrobienia listy!","Błąd!", JOptionPane.ERROR_MESSAGE);
+            this.startStopButtonFlag = false;
         }
     }
 
@@ -201,11 +231,12 @@ public class Module1 extends DefaultPanelModeView
     {
         LinkedList<String> mainList = new LinkedList<>();
         LinkedList<LinkedList<File>> twoDimensionList = new LinkedList<>();
+        this.filesCounter = 0;
         
         //mainList.add(this.choosenFolder.getName());
         twoDimensionList.add(new LinkedList<File>(Arrays.asList(this.choosenFolder.listFiles())));
 
-        while(true)
+        while(true && this.startStopButtonFlag)
         {
             while(true)
             {
@@ -216,9 +247,12 @@ public class Module1 extends DefaultPanelModeView
                         twoDimensionList.removeLast();
                         break;
                     }
-                    mainList.add(Main.newTabCharacterByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
+                    mainList.add(DefaultPanelModeView.newTabCharacterByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
+                    this.filesCounter++;
                     this.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
                     this.currectProcessObjectPathLabel.paintImmediately(this.currectProcessObjectPathLabel.getVisibleRect());
+                    this.label_filesCounter.setText(Long.toString(this.filesCounter));
+                    this.label_filesCounter.paintImmediately(this.label_filesCounter.getVisibleRect());
                     if(twoDimensionList.getLast().getFirst().isDirectory())
                     {
                         twoDimensionList.add(new LinkedList<File>(Arrays.asList(twoDimensionList.getLast().getFirst().listFiles())));
@@ -287,5 +321,7 @@ public class Module1 extends DefaultPanelModeView
             }
             else break;
         }
+        this.button_start.setText("START");
+        this.startStopButtonFlag = false;
     }
 }

@@ -312,7 +312,7 @@ public class Module2 extends DefaultPanelModeView
                 counter = 1;
                 while(true)
                 {
-                    if(lines.get(i).startsWith(Main.newTabCharacterByLevel(counter)) == true) counter += 1;
+                    if(lines.get(i).startsWith(DefaultPanelModeView.newTabCharacterByLevel(counter)) == true) counter += 1;
                     else if(counter == 1)
                     {
                         countTabs.add(0);
@@ -321,7 +321,7 @@ public class Module2 extends DefaultPanelModeView
                     else
                     {
                         countTabs.add(counter - 1);
-                        lines.set(i, lines.get(i).replace(Main.newTabCharacterByLevel(counter), ""));
+                        lines.set(i, lines.get(i).replace(DefaultPanelModeView.newTabCharacterByLevel(counter), ""));
                         break;
                     }   
                 }

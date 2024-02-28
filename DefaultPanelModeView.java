@@ -31,4 +31,11 @@ public abstract class DefaultPanelModeView extends JPanel
     {
         comp.setFont(comp.getFont().deriveFont((float) newSize));
     }
+
+    public static String newTabCharacterByLevel(int level)
+    {
+        String x = "";
+        for(int i=0; i<level; i++) x += "\t";
+        return x;
+    }
 }
