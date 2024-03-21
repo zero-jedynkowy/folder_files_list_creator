@@ -25,7 +25,9 @@ public class Main extends JFrame
     JPanel mainView;
         JTabbedPane tabbedModules;
             AbstractModule module1;
+            AbstractModule module2;
             AbstractModule module3;
+            AbstractModule module4;
     
     public Main()
     {
@@ -136,8 +138,17 @@ public class Main extends JFrame
         this.module1.setLanguage(languageContent.getJSONObject("CreateListModule"));
         this.tabbedModules.setTitleAt(0, languageContent.getJSONObject("CreateListModule").getJSONArray("titleModule").getString(0));
     
-        this.module3.setLanguage(languageContent.getJSONObject("Settings"));
-        this.tabbedModules.setTitleAt(1, languageContent.getJSONObject("Settings").getJSONArray("titleModule").getString(0));
+        // this.module2.setLanguage(languageContent.getJSONObject("CreateListModule"));
+        // this.tabbedModules.setTitleAt(0, languageContent.getJSONObject("CreateListModule").getJSONArray("titleModule").getString(0));
+    
+
+        // this.module2.setLanguage(languageContent.getJSONObject("CreateListModule"));
+        // this.tabbedModules.setTitleAt(1, languageContent.getJSONObject("CreateListModule").getJSONArray("titleModule").getString(0));
+    
+
+
+        this.module4.setLanguage(languageContent.getJSONObject("Settings"));
+        this.tabbedModules.setTitleAt(3, languageContent.getJSONObject("Settings").getJSONArray("titleModule").getString(0));
     
     }
 
@@ -147,9 +158,17 @@ public class Main extends JFrame
         this.module1.init();
         this.tabbedModules.addTab("Tworzenie listy", this.module1);
 
-        this.module3 = new Settings(this);
+        this.module2 = new ShowListModule(this);
+        this.module2.init();
+        this.tabbedModules.addTab("Lista", this.module2);
+
+        this.module3 = new AboutProgramModule(this);
         this.module3.init();
-        this.tabbedModules.addTab("Ustawienia", this.module3);
+        this.tabbedModules.addTab("O programie", this.module3);
+
+        this.module4 = new Settings(this);
+        this.module4.init();
+        this.tabbedModules.addTab("Ustawienia", this.module4);
     }
 
 
