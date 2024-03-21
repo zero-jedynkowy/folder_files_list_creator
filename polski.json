@@ -1,15 +1,18 @@
 {
-    "module_1":
-    [
-        "Tworzenie listy",
-        "Wybierz folder do zrobienia listy:", 
-        "Wybierz folder", 
-        "BRAK",
-        "Aktualny status: BRAK DZIAŁANIA",
-        "Akuralny status: DZIAŁANIE",
-        "Akutalnie przetwarzany plik:",
-        "BRAK",
-        "START",
-        "Zapisz plik"
-    ]
+    "CreateListModule":
+    {
+        "titleModule":["Tworzenie listy"],
+        "label_choosingFolder":["Wybierz folder do zrobienia listy:"],
+        "button_choosingFolder":["Wybierz folder"],
+        "label_choosingFolderPath":["   BRAK"],
+        "label_status":["Aktualny status: BRAK DZIAŁANIA", "Aktualny status: DZIAŁANIE"],
+        "label_currectProcessedObject":["Aktualnie przetwarzany plik:"],
+        "currectProcessObjectPathLabel":["   BRAK"],
+        "label_filesCounterTitle":["Liczba przetworzonych plików!"],
+        "button_start":["START", "STOP"],
+        "not_choose_folder":["Nie wybrano folderu do zrobienia listy!"],
+        "save_file":["Zapisz plik"],
+        "error":["Błąd!"],
+        "wrong_file_name": ["Nieprawidłowa nazwa pliku!"]
+    }
 }

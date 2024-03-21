@@ -7,6 +7,9 @@ import java.util.Map;
 import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import org.json.*;
@@ -16,43 +19,31 @@ public class Main extends JFrame
     final static int WIDTH = 500;
     final static int HEIGHT = 500;
     Map<String, Integer> settings;
-    View view;
+    JSONObject languageContent;
+//     View view;
+    JPanel mainView;
+        JTabbedPane tabbedModules;
+    AbstractModule module1;
     
     public Main()
     {
         super();
-        this.readSettings();
-        this.setTitle("File Lister");
+        this.setTitle("FFLC - Folder Files List Creator");
         this.setLayout(new BorderLayout());
         this.setSize(WIDTH, HEIGHT);
         this.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setSystemLook(this.settings.get("style"));
-        this.view = new View(this.settings.get("language"));
-        this.add(this.view, BorderLayout.CENTER);
+            this.loadSettings();
+            this.loadLanguage();
+            this.setLook();
+            this.setView();
+            this.setLanguage();
         this.setVisible(true);
     }
     
-
-    public void setSystemLook(int mode)
-    {
-        if(mode == 1)
-        {
-            try 
-            {
-                UIManager.setLookAndFeel(
-                UIManager.getSystemLookAndFeelClassName());
-            } 
-            catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
-            {
-                JOptionPane.showMessageDialog(this,"Nie można załadować motywu systemu","Błąd!", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-    }
-
-    public void readSettings()
+    void loadSettings()
     {
         String data = "";
         try 
@@ -76,6 +67,79 @@ public class Main extends JFrame
         this.settings.put("style", temp.getInt("style"));
         this.settings.put("language", temp.getInt("language"));
     }
+
+    void loadLanguage()
+    {
+        String fileName = "";
+        switch(this.settings.get("language"))
+        {
+            case 0:
+                fileName = "english.json";
+                break;
+            case 1:
+                fileName = "polski.json";
+                break;
+        }
+        String data = "";
+        try 
+        {
+            File myObj = new File(fileName);
+            Scanner myReader = new Scanner(myObj);
+            while (myReader.hasNextLine()) {
+            data += myReader.nextLine();
+        }
+        myReader.close();
+        } 
+        catch (FileNotFoundException e) 
+        {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        this.languageContent = new JSONObject(data);
+    }
+
+    void setLook()
+    {
+        if(this.settings.get("style") == 1)
+        {
+            try 
+            {
+                UIManager.setLookAndFeel(
+                UIManager.getSystemLookAndFeelClassName());
+            } 
+            catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
+            {
+                JOptionPane.showMessageDialog(this, "There is no possibility to set a system look!", "Error!", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    void setView()
+    {
+        this.mainView = new JPanel();
+        this.mainView.setLayout(new BorderLayout());
+        this.tabbedModules = new JTabbedPane();
+        this.setTabbedModules();
+        this.mainView.add(this.tabbedModules, BorderLayout.CENTER);
+        AbstractModule.changeFontSize(this.tabbedModules, 15);
+        this.tabbedModules.setVisible(true);
+        this.mainView.setVisible(true);
+        this.add(this.mainView, BorderLayout.CENTER);
+    }
+
+    void setLanguage()
+    {
+        this.module1.setLanguage(languageContent.getJSONObject("CreateListModule"));
+        this.tabbedModules.setTitleAt(0, languageContent.getJSONObject("CreateListModule").getJSONArray("titleModule").getString(0));
+    }
+
+    void setTabbedModules()
+    {
+        this.module1 = new CreateListModule((Main)this.getParent());
+        this.module1.init();
+        this.tabbedModules.addTab("Tworzenie listy", this.module1);
+    }
+
 
     public static void main(String args[])
     {
