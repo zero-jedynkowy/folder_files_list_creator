@@ -14,5 +14,11 @@
         "save_file":["Zapisz plik"],
         "error":["Błąd!"],
         "wrong_file_name": ["Nieprawidłowa nazwa pliku!"]
+    },
+
+    "Settings":
+    {
+        "titleModule":["Ustawienia"],
+        "label_settingsHeader":["Ustawienia"]
     }
 }

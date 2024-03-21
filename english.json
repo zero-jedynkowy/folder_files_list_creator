@@ -13,6 +13,14 @@
         "not_choose_folder":["The list's folder wasn't choosen!"],
         "save_file":["Save file"],
         "error":["Error!"],
-        "wrong_file_name": ["Wrong a file's name!"]
+        "wrong_file_name": ["Wrong a file's name!"],
+        "fileChooser_title":["Choose a file"],
+        "not_read_folder":["There is no possibility to read the content of the chosen folder!"]
+    },
+
+    "Settings":
+    {
+        "titleModule":["Settings"],
+        "label_settingsHeader":["Settings"]
     }
 }

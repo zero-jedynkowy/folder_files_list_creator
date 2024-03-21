@@ -1,5 +1,4 @@
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileWriter;
@@ -11,7 +10,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -23,7 +21,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
-import org.json.JSONObject;
 
 public class CreateListModule extends AbstractModule
 {
@@ -50,9 +47,6 @@ public class CreateListModule extends AbstractModule
 
     boolean startStopButtonFlag = false;
     Thread myThread;
-
-    HashMap<String, Component> listOfElements;
-    JSONObject languageContent;
 
     public CreateListModule(Main mainWindow) 
     {
@@ -195,30 +189,6 @@ public class CreateListModule extends AbstractModule
         this.button_start.addActionListener(e -> this.startMakingList());
     }
 
-    @Override
-    public void setLanguage(JSONObject languageContent) 
-    {
-        Component temp;
-        String content;
-        this.languageContent = languageContent;
-        
-        for(Map.Entry<String, Component> c : this.listOfElements.entrySet())
-        {
-            
-            temp = this.listOfElements.get(c.getKey());
-            content = languageContent.getJSONArray(c.getKey()).getString(0);
-            System.out.println(content);
-            if(temp instanceof JLabel)
-            {
-                ((JLabel)temp).setText(content);
-            }
-            else if(temp instanceof JButton)
-            {
-                ((JButton)temp).setText(content);
-            }
-        }
-    }
-
     public void updateChoosedFolderPathLabel(File newPath)
     {
         if(newPath == null) this.label_choosingFolderPath.setText(this.getLanguageRecord("label_choosingFolderPath", 0));
@@ -227,24 +197,27 @@ public class CreateListModule extends AbstractModule
 
     public void chooseFolder()
     {
-        JFileChooser x = new JFileChooser("Wybierz folder");
-        x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        while(true)
+        if(!this.startStopButtonFlag)
         {
-            int flag = x.showOpenDialog(this);
-            if(flag == JFileChooser.APPROVE_OPTION)
+            JFileChooser x = new JFileChooser(this.getLanguageRecord("fileChooser_title", 0));
+            x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            while(true)
             {
-                this.choosenFolder = x.getSelectedFile();
-                if(this.choosenFolder.listFiles() == null) JOptionPane.showMessageDialog(this,"Nie można odczytać zawartości wybranego folderu!","Błąd!", JOptionPane.ERROR_MESSAGE);
-                else break;
+                int flag = x.showOpenDialog(this);
+                if(flag == JFileChooser.APPROVE_OPTION)
+                {
+                    this.choosenFolder = x.getSelectedFile();
+                    if(this.choosenFolder.listFiles() == null) JOptionPane.showMessageDialog(this, this.getLanguageRecord("error", 0),this.getLanguageRecord("not_read_folder", 0), JOptionPane.ERROR_MESSAGE);
+                    else break;
+                }
+                else
+                {
+                    this.choosenFolder = null;
+                    break;
+                }
             }
-            else
-            {
-                this.choosenFolder = null;
-                break;
-            }
+            this.updateChoosedFolderPathLabel(this.choosenFolder);
         }
-        this.updateChoosedFolderPathLabel(this.choosenFolder);
     }
 
     public void startMakingList()
@@ -367,6 +340,9 @@ public class CreateListModule extends AbstractModule
         }
         this.button_start.setText(this.getLanguageRecord("button_start", 0));
         this.startStopButtonFlag = false;
+        this.choosenFolder = null;
+        this.currectProcessObjectPathLabel.setText(this.getLanguageRecord("currectProcessObjectPathLabel", 0));
+        this.label_choosingFolderPath.setText(this.getLanguageRecord("label_choosingFolderPath", 0));
     }
     
     String getLanguageRecord(String key, int id)

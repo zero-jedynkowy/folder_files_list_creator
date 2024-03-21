@@ -18,12 +18,14 @@ public class Main extends JFrame
 {
     final static int WIDTH = 500;
     final static int HEIGHT = 500;
+
     Map<String, Integer> settings;
     JSONObject languageContent;
-//     View view;
+    
     JPanel mainView;
         JTabbedPane tabbedModules;
-    AbstractModule module1;
+            AbstractModule module1;
+            AbstractModule module3;
     
     public Main()
     {
@@ -98,20 +100,27 @@ public class Main extends JFrame
         this.languageContent = new JSONObject(data);
     }
 
-    void setLook()
+    public boolean setLook()
     {
-        if(this.settings.get("style") == 1)
+        
+        try 
         {
-            try 
+            if(this.settings.get("style") == 1)
             {
-                UIManager.setLookAndFeel(
-                UIManager.getSystemLookAndFeelClassName());
-            } 
-            catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
-            {
-                JOptionPane.showMessageDialog(this, "There is no possibility to set a system look!", "Error!", JOptionPane.ERROR_MESSAGE);
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
+            else
+            {
+                UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            }
+            return true;
+        } 
+        catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) 
+        {
+            JOptionPane.showMessageDialog(this, "There is no possibility to set this look!", "Error!", JOptionPane.ERROR_MESSAGE);
         }
+        SwingUtilities.updateComponentTreeUI(this);
+        return false;
     }
 
     void setView()
@@ -131,13 +140,21 @@ public class Main extends JFrame
     {
         this.module1.setLanguage(languageContent.getJSONObject("CreateListModule"));
         this.tabbedModules.setTitleAt(0, languageContent.getJSONObject("CreateListModule").getJSONArray("titleModule").getString(0));
+    
+        // this.module3.setLanguage(languageContent.getJSONObject("Settings"));
+        // this.tabbedModules.setTitleAt(1, languageContent.getJSONObject("Settings").getJSONArray("titleModule").getString(0));
+    
     }
 
     void setTabbedModules()
     {
-        this.module1 = new CreateListModule((Main)this.getParent());
+        this.module1 = new CreateListModule(this);
         this.module1.init();
         this.tabbedModules.addTab("Tworzenie listy", this.module1);
+
+        // this.module3 = new Settings(this);
+        // this.module3.init();
+        // this.tabbedModules.addTab("Ustawienia", this.module3);
     }
 
 
