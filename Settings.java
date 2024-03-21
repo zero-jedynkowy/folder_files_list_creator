@@ -1,10 +1,13 @@
 import java.awt.Dimension;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
@@ -83,6 +86,9 @@ public class Settings extends AbstractModule
         AbstractModule.changeFontSize(this.button_setSettings, 15);
         this.button_setSettings.setMaximumSize(new Dimension(400, 50));
         this.button_setSettings.setAlignmentX(CENTER_ALIGNMENT);
+
+        //
+        this.getAndSetSettings();
     }
 
     @Override
@@ -107,15 +113,54 @@ public class Settings extends AbstractModule
     @Override
     public void setActions() 
     {
-        this.button_setSettings.addActionListener(e -> {
-            this.mainWindow.settings.put("language", this.comboBox_choosingLanguage.getSelectedIndex());
+        this.button_setSettings.addActionListener(e -> this.setAndCheckNewSettings());
+    }
+
+    public void getAndSetSettings()
+    {
+        this.comboBox_choosingLanguage.setSelectedIndex(this.mainWindow.settings.getInt("language"));
+        this.comboBox_choosingTheme.setSelectedIndex(this.mainWindow.settings.getInt("style"));
+    }
+
+    public void setAndCheckNewSettings()
+    {
+        int language = this.comboBox_choosingLanguage.getSelectedIndex();
+        int style = this.comboBox_choosingTheme.getSelectedIndex();
+        boolean myFlag = (language != this.mainWindow.settings.getInt("language")) || (style != this.mainWindow.settings.getInt("style"));
+        boolean close = false;
+
+        if(language != this.mainWindow.settings.getInt("language"))
+        {
+            this.mainWindow.settings.put("language", language);
             this.mainWindow.loadLanguage();
             this.mainWindow.setLanguage();
-            this.mainWindow.settings.put("style", this.comboBox_choosingTheme.getSelectedIndex());
-            this.mainWindow.setLook();
-        });
+        }
         
+        if(style != this.mainWindow.settings.getInt("style"))
+        {
+            this.mainWindow.settings.put("style", style);
+            JOptionPane.showMessageDialog(this, this.getLanguageRecord("setNewThemeMessage", 0), this.getLanguageRecord("setNewThemeMessage", 1), JOptionPane.ERROR_MESSAGE);
+            close = true;
+            if(!this.mainWindow.setLook())
+            {
+                this.mainWindow.settings.put("style", 0);
+            }
+        }
+
+        if(myFlag)
+        {
+            try (FileWriter file = new FileWriter("settings.json")) 
+            {
+                file.write(this.mainWindow.settings.toString());
+            } 
+            catch (IOException e) 
+            {
+                e.printStackTrace();
+            }
+        }
         
-    }
     
+        
+        if(close) System.exit(0);
+    }
 }

@@ -19,7 +19,7 @@ public class Main extends JFrame
     final static int WIDTH = 500;
     final static int HEIGHT = 500;
 
-    Map<String, Integer> settings;
+    JSONObject settings;
     JSONObject languageContent;
     
     JPanel mainView;
@@ -62,18 +62,13 @@ public class Main extends JFrame
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
-        this.settings = new HashMap<String, Integer>();
-        this.settings.put("style", 0);
-        this.settings.put("language", 0);
-        JSONObject temp = new JSONObject(data);
-        this.settings.put("style", temp.getInt("style"));
-        this.settings.put("language", temp.getInt("language"));
+        this.settings = new JSONObject(data);
     }
 
     void loadLanguage()
     {
         String fileName = "";
-        switch(this.settings.get("language"))
+        switch(this.settings.getInt("language"))
         {
             case 0:
                 fileName = "english.json";
@@ -105,7 +100,7 @@ public class Main extends JFrame
         
         try 
         {
-            if(this.settings.get("style") == 1)
+            if(this.settings.getInt("style") == 1)
             {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             }
@@ -141,8 +136,8 @@ public class Main extends JFrame
         this.module1.setLanguage(languageContent.getJSONObject("CreateListModule"));
         this.tabbedModules.setTitleAt(0, languageContent.getJSONObject("CreateListModule").getJSONArray("titleModule").getString(0));
     
-        // this.module3.setLanguage(languageContent.getJSONObject("Settings"));
-        // this.tabbedModules.setTitleAt(1, languageContent.getJSONObject("Settings").getJSONArray("titleModule").getString(0));
+        this.module3.setLanguage(languageContent.getJSONObject("Settings"));
+        this.tabbedModules.setTitleAt(1, languageContent.getJSONObject("Settings").getJSONArray("titleModule").getString(0));
     
     }
 
@@ -152,9 +147,9 @@ public class Main extends JFrame
         this.module1.init();
         this.tabbedModules.addTab("Tworzenie listy", this.module1);
 
-        // this.module3 = new Settings(this);
-        // this.module3.init();
-        // this.tabbedModules.addTab("Ustawienia", this.module3);
+        this.module3 = new Settings(this);
+        this.module3.init();
+        this.tabbedModules.addTab("Ustawienia", this.module3);
     }
 
 

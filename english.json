@@ -21,6 +21,8 @@
     "Settings":
     {
         "titleModule":["Settings"],
-        "label_settingsHeader":["Settings"]
+        "label_settingsHeader":["Settings"],
+        "setNewThemeMessage":["To set a new layout, you need to restart the program!", "Message!"]
+
     }
 }

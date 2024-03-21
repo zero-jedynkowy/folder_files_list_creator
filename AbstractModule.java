@@ -68,4 +68,9 @@ public abstract class AbstractModule extends JPanel
         for(int i=0; i<level; i++) x += "\t";
         return x;
     }
+
+    String getLanguageRecord(String key, int id)
+    {
+        return this.languageContent.getJSONArray(key).getString(id);
+    }
 }

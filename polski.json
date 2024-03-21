@@ -13,12 +13,15 @@
         "not_choose_folder":["Nie wybrano folderu do zrobienia listy!"],
         "save_file":["Zapisz plik"],
         "error":["Błąd!"],
-        "wrong_file_name": ["Nieprawidłowa nazwa pliku!"]
+        "wrong_file_name": ["Nieprawidłowa nazwa pliku!"],
+        "fileChooser_title":["Wybierz plik"],
+        "not_read_folder":["Nie można odczytać zawartości tego folderu!"] 
     },
 
     "Settings":
     {
         "titleModule":["Ustawienia"],
-        "label_settingsHeader":["Ustawienia"]
+        "label_settingsHeader":["Ustawienia"],
+        "setNewThemeMessage":["Aby ustawić nowy widok trzeba uruchomić aplikacje ponownie!", "Komunikat"]
     }
 }

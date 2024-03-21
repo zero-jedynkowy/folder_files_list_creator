@@ -343,10 +343,7 @@ public class CreateListModule extends AbstractModule
         this.choosenFolder = null;
         this.currectProcessObjectPathLabel.setText(this.getLanguageRecord("currectProcessObjectPathLabel", 0));
         this.label_choosingFolderPath.setText(this.getLanguageRecord("label_choosingFolderPath", 0));
-    }
-    
-    String getLanguageRecord(String key, int id)
-    {
-        return this.languageContent.getJSONArray(key).getString(id);
+        this.filesCounter = 0;
+        this.label_filesCounter.setText(Integer.toString(0));
     }
 }
