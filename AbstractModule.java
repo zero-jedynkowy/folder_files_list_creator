@@ -45,7 +45,6 @@ public abstract class AbstractModule extends JPanel
             
             temp = this.listOfElements.get(c.getKey());
             content = languageContent.getJSONArray(c.getKey()).getString(0);
-            System.out.println(content);
             if(temp instanceof JLabel)
             {
                 ((JLabel)temp).setText(content);

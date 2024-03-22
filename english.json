@@ -18,6 +18,17 @@
         "not_read_folder":["There is no possibility to read the content of the chosen folder!"]
     },
 
+    "EditShowListModule":
+    {
+        "titleModule":["Show/Edit"],
+        "label_loadFilesTitle":["Choose files to show"],
+        "button_addFile":["Add a file"],
+        "button_removeFiles":["Delete a file"],
+        "button_addFolder":["Add a folder"],
+        "button_reset":["Reset"],
+        "button_generateList":["Generate a list"]
+    },
+
     "Settings":
     {
         "titleModule":["Settings"],

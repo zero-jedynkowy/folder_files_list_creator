@@ -30,7 +30,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class Module2 extends DefaultPanelModeView
+public class EditShowListModule extends AbstractModule
 {
 
     JLabel label_loadFilesTitle;
@@ -59,7 +59,7 @@ public class Module2 extends DefaultPanelModeView
     JTree originalTree;
     DefaultMutableTreeNode originalNode;
 
-    public Module2(Main mainWindow) 
+    public EditShowListModule(Main mainWindow) 
     {
         super(mainWindow);
         this.addedFiles = new LinkedList<File>();
@@ -71,9 +71,10 @@ public class Module2 extends DefaultPanelModeView
         this.label_loadFilesTitle = new JLabel("Wybierz pliki do wyświetlenia:", JLabel.CENTER);
         this.label_loadFilesTitle.setVisible(true);
         this.label_loadFilesTitle.setAlignmentX(CENTER_ALIGNMENT);
-        DefaultPanelModeView.changeFontSize(this.label_loadFilesTitle, 20);
+        AbstractModule.changeFontSize(this.label_loadFilesTitle, 20);
         this.label_loadFilesTitle.setHorizontalAlignment(SwingConstants.CENTER);
         this.label_loadFilesTitle.setMaximumSize(new Dimension(400, 50));
+        this.listOfElements.put("label_loadFilesTitle", this.label_loadFilesTitle);
 
         this.panel_mainCenterPanel = new JPanel();
         this.panel_mainCenterPanel.setLayout(new BoxLayout(this.panel_mainCenterPanel, BoxLayout.X_AXIS));
@@ -90,26 +91,33 @@ public class Module2 extends DefaultPanelModeView
             this.panel_mainRightCenterPanel.setLayout(new BoxLayout(this.panel_mainRightCenterPanel, BoxLayout.Y_AXIS));
             this.panel_mainRightCenterPanel.setMaximumSize(new Dimension(190, 200));
                 this.button_addFile = new JButton("Dodaj plik");
-                DefaultPanelModeView.changeFontSize(this.button_addFile, 15);
+                AbstractModule.changeFontSize(this.button_addFile, 15);
                 this.button_addFile.setMaximumSize(new Dimension(190, 50));
                 this.button_addFile.setAlignmentX(CENTER_ALIGNMENT);
+                this.listOfElements.put("button_addFile", this.button_addFile);
                 this.button_removeFiles = new JButton("Usuń pliki");
-                DefaultPanelModeView.changeFontSize(this.button_removeFiles, 15);
+                AbstractModule.changeFontSize(this.button_removeFiles, 15);
                 this.button_removeFiles.setMaximumSize(new Dimension(190, 50));
                 this.button_removeFiles.setAlignmentX(CENTER_ALIGNMENT);
+                this.listOfElements.put("button_removeFiles", this.button_removeFiles);
                 this.button_addFolder = new JButton("Dodaj folder");
-                DefaultPanelModeView.changeFontSize(this.button_addFolder, 15);
+                AbstractModule.changeFontSize(this.button_addFolder, 15);
                 this.button_addFolder.setMaximumSize(new Dimension(190, 50));
                 this.button_addFolder.setAlignmentX(CENTER_ALIGNMENT);
+                this.listOfElements.put("button_addFolder", this.button_addFolder);
                 this.button_reset = new JButton("Reset");
-                DefaultPanelModeView.changeFontSize(this.button_reset, 15);
+                AbstractModule.changeFontSize(this.button_reset, 15);
                 this.button_reset.setMaximumSize(new Dimension(190, 50));
                 this.button_reset.setAlignmentX(CENTER_ALIGNMENT);
+                this.listOfElements.put("button_reset", this.button_reset);
+
                 
         this.button_generateList = new JButton("Generuj listę");
-        DefaultPanelModeView.changeFontSize(this.button_generateList, 15);
+        AbstractModule.changeFontSize(this.button_generateList, 15);
         this.button_generateList.setMaximumSize(new Dimension(400, 50));
         this.button_generateList.setAlignmentX(CENTER_ALIGNMENT);
+        this.listOfElements.put("button_generateList", this.button_generateList);
+
 
         this.frame_newWindow = new JFrame("Wynik");
         this.frame_newWindow.setMinimumSize(new Dimension(Main.WIDTH, Main.HEIGHT));
@@ -126,24 +134,25 @@ public class Module2 extends DefaultPanelModeView
         this.panel_searchSection.setAlignmentX(CENTER_ALIGNMENT);
         
         this.label_searchLabel = new JLabel("Szukaj: ", JLabel.CENTER);
-        DefaultPanelModeView.changeFontSize(this.label_searchLabel, 20);
+        AbstractModule.changeFontSize(this.label_searchLabel, 20);
         this.label_searchLabel.setMaximumSize(new Dimension(200, 100));
 
         this.textField_searchField = new JTextField();
         this.textField_searchField.setMaximumSize(new Dimension(300, 100));
-        DefaultPanelModeView.changeFontSize(this.textField_searchField, 20);
+        AbstractModule.changeFontSize(this.textField_searchField, 20);
 
         this.button_plusSize = new JButton("+");
         this.button_plusSize.setMaximumSize(new Dimension(50, 50));
-        DefaultPanelModeView.changeFontSize(this.button_plusSize, 20);
+        AbstractModule.changeFontSize(this.button_plusSize, 20);
 
         this.button_minusSize = new JButton("-");
         this.button_minusSize.setMaximumSize(new Dimension(50, 50));
-        DefaultPanelModeView.changeFontSize(this.button_minusSize, 20);
+        AbstractModule.changeFontSize(this.button_minusSize, 20);
 
         this.panel_results = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.panel_results.setMaximumSize(new Dimension(400, 400));
         this.panel_results.setBorder(BorderFactory.createEtchedBorder(Color.BLACK, Color.BLACK));
+
     }
 
     @Override
@@ -182,6 +191,7 @@ public class Module2 extends DefaultPanelModeView
         this.panel_newWindowContent.add(Box.createVerticalStrut(10));
         this.panel_newWindowContent.add(this.panel_results);
         this.panel_newWindowContent.add(Box.createVerticalStrut(10));
+
     }
 
     @Override
@@ -193,7 +203,7 @@ public class Module2 extends DefaultPanelModeView
         this.button_reset.addActionListener(e -> this.reset());
         this.button_generateList.addActionListener(e -> this.generate());
     }
-    
+
     @SuppressWarnings("unchecked")
     public void addFile()
     {
@@ -283,13 +293,13 @@ public class Module2 extends DefaultPanelModeView
         }
         else
         {
-            this.frame_newWindow.setLocationRelativeTo(null);
-            this.originalNode = new DefaultMutableTreeNode();
-            for(File x : this.addedFiles) this.originalNode.add(this.createList(x));
-            this.originalTree = new JTree(this.originalNode);
-            DefaultPanelModeView.changeFontSize(this.originalTree, 20);
-            this.panel_results.setViewportView(this.originalTree);
-            this.frame_newWindow.setVisible(true);
+            // this.frame_newWindow.setLocationRelativeTo(null);
+            // this.originalNode = new DefaultMutableTreeNode();
+            // for(File x : this.addedFiles) this.originalNode.add(this.createList(x));
+            // this.originalTree = new JTree(this.originalNode);
+            // AbstractModule.changeFontSize(this.originalTree, 20);
+            // this.panel_results.setViewportView(this.originalTree);
+            // this.frame_newWindow.setVisible(true);
         }
     }
 
@@ -312,7 +322,7 @@ public class Module2 extends DefaultPanelModeView
                 counter = 1;
                 while(true)
                 {
-                    if(lines.get(i).startsWith(DefaultPanelModeView.newTabCharacterByLevel(counter)) == true) counter += 1;
+                    if(lines.get(i).startsWith(AbstractModule.newTabCharacterByLevel(counter)) == true) counter += 1;
                     else if(counter == 1)
                     {
                         countTabs.add(0);
@@ -321,7 +331,7 @@ public class Module2 extends DefaultPanelModeView
                     else
                     {
                         countTabs.add(counter - 1);
-                        lines.set(i, lines.get(i).replace(DefaultPanelModeView.newTabCharacterByLevel(counter), ""));
+                        lines.set(i, lines.get(i).replace(AbstractModule.newTabCharacterByLevel(counter), ""));
                         break;
                     }   
                 }
@@ -361,4 +371,5 @@ public class Module2 extends DefaultPanelModeView
         }
         return mainTree;
     }
+    
 }

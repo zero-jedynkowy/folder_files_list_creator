@@ -294,7 +294,6 @@ public class CreateListModule extends AbstractModule
         try 
         {
             temp = Files.createTempFile("temp", ".txt");
-            System.out.println(temp);
         } 
         catch (IOException e) {}
         try (FileWriter fileWriter = new FileWriter(temp.toFile())) 

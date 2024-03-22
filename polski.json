@@ -18,6 +18,17 @@
         "not_read_folder":["Nie można odczytać zawartości tego folderu!"] 
     },
 
+    "EditShowListModule":
+    {
+        "titleModule":["Pokaż/Edytuj"],
+        "label_loadFilesTitle":["Wybierz plik do wyświetlenia:"],
+        "button_addFile":["Dodaj plik"],
+        "button_removeFiles":["Usuń plik"],
+        "button_addFolder":["Dodaj folder"],
+        "button_reset":["Reset"],
+        "button_generateList":["Generuj listę"]
+    },
+
     "Settings":
     {
         "titleModule":["Ustawienia"],
