@@ -30,7 +30,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-public class EditShowListModule extends AbstractModule
+public class EditShowListModule extends AbstractModule implements Runnable
 {
 
     JLabel label_loadFilesTitle;
@@ -45,19 +45,18 @@ public class EditShowListModule extends AbstractModule
             JButton button_addFolder;
             JButton button_reset;
     JButton button_generateList;
+    public boolean flag = true;
 
-    JFrame frame_newWindow;
-        JPanel panel_newWindowContent;
-            JPanel panel_searchSection;
-                JLabel label_searchLabel;
-                JTextField textField_searchField;
-                JButton button_plusSize;
-                JButton button_minusSize;
-            JScrollPane panel_results;
+    EditShowFrame frame_newWindow;
+    
 
     LinkedList<File> addedFiles;
     JTree originalTree;
     DefaultMutableTreeNode originalNode;
+
+    long  processingFilesCount;
+    long processingLinesCount;
+    ProgressCreatingTree processStatsDialog;
 
     public EditShowListModule(Main mainWindow) 
     {
@@ -119,40 +118,10 @@ public class EditShowListModule extends AbstractModule
         this.listOfElements.put("button_generateList", this.button_generateList);
 
 
-        this.frame_newWindow = new JFrame("Wynik");
-        this.frame_newWindow.setMinimumSize(new Dimension(Main.WIDTH, Main.HEIGHT));
-        this.frame_newWindow.setSize(new Dimension(Main.WIDTH, Main.HEIGHT));
-        this.frame_newWindow.setResizable(true);
-        this.frame_newWindow.setLayout(new BorderLayout());
+        this.processStatsDialog = new ProgressCreatingTree(this.mainWindow, "Tworzenie listy", true, this);
 
-        this.panel_newWindowContent = new JPanel();
-        this.panel_newWindowContent.setLayout(new BoxLayout(this.panel_newWindowContent, BoxLayout.Y_AXIS));
 
-        this.panel_searchSection = new JPanel();
-        this.panel_searchSection.setLayout(new BoxLayout(this.panel_searchSection, BoxLayout.X_AXIS));
-        this.panel_searchSection.setMaximumSize(new Dimension(400, 50));
-        this.panel_searchSection.setAlignmentX(CENTER_ALIGNMENT);
-        
-        this.label_searchLabel = new JLabel("Szukaj: ", JLabel.CENTER);
-        AbstractModule.changeFontSize(this.label_searchLabel, 20);
-        this.label_searchLabel.setMaximumSize(new Dimension(200, 100));
-
-        this.textField_searchField = new JTextField();
-        this.textField_searchField.setMaximumSize(new Dimension(300, 100));
-        AbstractModule.changeFontSize(this.textField_searchField, 20);
-
-        this.button_plusSize = new JButton("+");
-        this.button_plusSize.setMaximumSize(new Dimension(50, 50));
-        AbstractModule.changeFontSize(this.button_plusSize, 20);
-
-        this.button_minusSize = new JButton("-");
-        this.button_minusSize.setMaximumSize(new Dimension(50, 50));
-        AbstractModule.changeFontSize(this.button_minusSize, 20);
-
-        this.panel_results = new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        this.panel_results.setMaximumSize(new Dimension(400, 400));
-        this.panel_results.setBorder(BorderFactory.createEtchedBorder(Color.BLACK, Color.BLACK));
-
+        this.frame_newWindow = new EditShowFrame(this.mainWindow);
     }
 
     @Override
@@ -175,23 +144,6 @@ public class EditShowListModule extends AbstractModule
                 this.panel_mainRightCenterPanel.add(this.button_reset);
         this.add(Box.createVerticalStrut(10));
         this.add(this.button_generateList);
-
-        this.frame_newWindow.add(this.panel_newWindowContent, BorderLayout.CENTER);
-            this.panel_newWindowContent.add(Box.createVerticalStrut(10));
-            this.panel_newWindowContent.add(this.panel_searchSection);
-                this.panel_searchSection.add(Box.createHorizontalStrut(10));
-                this.panel_searchSection.add(this.label_searchLabel);
-                this.panel_searchSection.add(Box.createHorizontalStrut(10));
-                this.panel_searchSection.add(this.textField_searchField);
-                this.panel_searchSection.add(Box.createHorizontalStrut(10));
-                this.panel_searchSection.add(this.button_plusSize);
-                this.panel_searchSection.add(Box.createHorizontalStrut(10));
-                this.panel_searchSection.add(this.button_minusSize);
-                this.panel_searchSection.add(Box.createHorizontalStrut(10));
-        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
-        this.panel_newWindowContent.add(this.panel_results);
-        this.panel_newWindowContent.add(Box.createVerticalStrut(10));
-
     }
 
     @Override
@@ -293,16 +245,41 @@ public class EditShowListModule extends AbstractModule
         }
         else
         {
-            // this.frame_newWindow.setLocationRelativeTo(null);
-            // this.originalNode = new DefaultMutableTreeNode();
-            // for(File x : this.addedFiles) this.originalNode.add(this.createList(x));
-            // this.originalTree = new JTree(this.originalNode);
-            // AbstractModule.changeFontSize(this.originalTree, 20);
+            this.processingFilesCount = 0;
+            this.processingLinesCount = 0;
+            this.flag = true;
+            // this.processStatsDialog = new ProgressCreatingTree(this.mainWindow, "Tworzenie listy", true);
+            this.originalNode = new DefaultMutableTreeNode();
+            Thread makeTree = new Thread(this);
+            makeTree.start();
+            this.processStatsDialog.setVisible(true);
+            
+
+
+
+
+
+            
+            this.originalTree = new JTree(this.originalNode);
+            AbstractModule.changeFontSize(this.originalTree, 20);
             // this.panel_results.setViewportView(this.originalTree);
-            // this.frame_newWindow.setVisible(true);
+            this.frame_newWindow.setVisible(true);
         }
     }
 
+    public void run()
+    {   
+        this.processStatsDialog.setMaxCounts(this.addedFiles.size(), 100);
+        for(File x : this.addedFiles)
+        {
+            this.originalNode.add(this.createList(x));
+            this.processingFilesCount++;
+            this.processStatsDialog.setCounts(this.processingFilesCount, -1);
+        }
+        System.out.println("dads");
+        this.processStatsDialog.dispose();
+    }
+    
     public DefaultMutableTreeNode createList(File file)
     {
         LinkedList<Integer> countTabs = new LinkedList<>();
@@ -316,9 +293,15 @@ public class EditShowListModule extends AbstractModule
             {
                 lines.add(x);
             }
-
+            this.processStatsDialog.setMaxCounts(-1, 2*lines.size());
+            this.processingLinesCount = 0;
+            this.processStatsDialog.setCounts(-1, 0);
             for(int i=0; i<lines.size(); i++)
             {
+                if(!this.flag)
+                {
+                    return mainTree;
+                }
                 counter = 1;
                 while(true)
                 {
@@ -335,6 +318,9 @@ public class EditShowListModule extends AbstractModule
                         break;
                     }   
                 }
+                this.processingLinesCount++;
+                this.processStatsDialog.setCounts(-1, this.processingLinesCount);
+                this.processStatsDialog.progressBar_progressLines.paintImmediately(this.processStatsDialog.progressBar_progressLines.getVisibleRect());
             }
             LinkedList<DefaultMutableTreeNode> loweringList = new LinkedList<>();
             int level = 0;
@@ -342,6 +328,10 @@ public class EditShowListModule extends AbstractModule
             DefaultMutableTreeNode lastTreeNode = mainTree;
             for(int i=0; i<countTabs.size(); i++)
             {
+                if(!this.flag)
+                {
+                    return mainTree;
+                }
                 if(countTabs.get(i) == level)
                 {
                     DefaultMutableTreeNode newTree = new DefaultMutableTreeNode(lines.get(i));
@@ -362,6 +352,9 @@ public class EditShowListModule extends AbstractModule
                     lastTreeNode = new DefaultMutableTreeNode(lines.get(i));
                     loweringList.getLast().add(lastTreeNode);
                 }
+                this.processingLinesCount++;
+                this.processStatsDialog.setCounts(-1, this.processingLinesCount);
+                this.processStatsDialog.progressBar_progressLines.paintImmediately(this.processStatsDialog.progressBar_progressLines.getVisibleRect());
             }
             
         } 
