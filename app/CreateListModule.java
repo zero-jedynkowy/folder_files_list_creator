@@ -21,8 +21,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
+import java.awt.Component;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import org.json.JSONObject;
 
-public class CreateListModule extends AbstractModule
+public class CreateListModule extends BasicModule
 {
     JLabel label_choosingFolder;
     JPanel panel_choosingFolderPath;
@@ -33,7 +41,7 @@ public class CreateListModule extends AbstractModule
     JLabel label_status;
     JLabel label_currectProcessedObject;
         JScrollPane  scrollPane_currectProcessObjectPathScroll;
-            JLabel currectProcessObjectPathLabel;
+            JLabel label_currentProcessObjectPathLabel;
         
     JLabel label_filesCounterTitle;
     JLabel label_filesCounter;
@@ -47,24 +55,23 @@ public class CreateListModule extends AbstractModule
 
     boolean startStopButtonFlag = false;
     Thread myThread;
-
-    public CreateListModule(Main mainWindow) 
+    
+    public CreateListModule(String id) 
     {
-        super(mainWindow);
-        this.listOfElements = new HashMap<>();
+        super(id);
     }
 
     @Override
     public void setView() 
     {
-       //
-        this.label_choosingFolder = new JLabel("Wybierz folder do zrobienia listy:", JLabel.CENTER);
+        //
+        // this.label_choosingFolder = new JLabel("Wybierz folder do zrobienia listy:", JLabel.CENTER);
+        this.label_choosingFolder = this.createElement("label_choosingFolder", new JLabel());
         this.label_choosingFolder.setVisible(true);
-        this.label_choosingFolder.setAlignmentX(CENTER_ALIGNMENT);
-        AbstractModule.changeFontSize(this.label_choosingFolder, 20);
+        this.label_choosingFolder.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+        BasicElement.changeFontSize(this.label_choosingFolder, 20);
         this.label_choosingFolder.setHorizontalAlignment(SwingConstants.CENTER);
         this.label_choosingFolder.setMaximumSize(new Dimension(400, 50));
-        this.listOfElements.put("label_choosingFolder", this.label_choosingFolder);
         
         //
         this.panel_choosingFolderPath = new JPanel();
@@ -73,113 +80,105 @@ public class CreateListModule extends AbstractModule
         this.panel_choosingFolderPath.setMaximumSize(new Dimension(400, 50));
 
         //
-        this.button_choosingFolder = new JButton("Wybierz folder");
-        AbstractModule.changeFontSize(this.button_choosingFolder, 15);
+        this.button_choosingFolder = this.createElement("button_choosingFolder", new JButton());
+        BasicElement.changeFontSize(this.button_choosingFolder, 15);
         this.button_choosingFolder.setMaximumSize(new Dimension(100, 50));
-        this.listOfElements.put("button_choosingFolder", this.button_choosingFolder);
 
 
         //
-        this.label_choosingFolderPath = new JLabel("   BRAK");
+        this.label_choosingFolderPath = this.createElement("label_choosingFolderPath", new JLabel());
         this.scrollPane_choosingFolderPathScroll = new JScrollPane(this.label_choosingFolderPath, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        AbstractModule.changeFontSize(this.label_choosingFolderPath, 15);
-        AbstractModule.changeFontSize(this.scrollPane_choosingFolderPathScroll, 15);
+        BasicElement.changeFontSize(this.label_choosingFolderPath, 15);
+        BasicElement.changeFontSize(this.scrollPane_choosingFolderPathScroll, 15);
         this.label_choosingFolderPath.setVisible(true);
-        this.listOfElements.put("label_choosingFolderPath", this.label_choosingFolderPath);
 
         
         //
-        this.label_status = new JLabel("Aktualny status: BRAK DZIAŁANIA", JLabel.CENTER);
+        this.label_status = this.createElement("label_status", new JLabel());
         this.label_status.setForeground(Color.RED);
         this.label_status.setVisible(true);
-        this.label_status.setAlignmentX(CENTER_ALIGNMENT);
-        AbstractModule.changeFontSize(this.label_status, 20);
+        this.label_status.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+        BasicElement.changeFontSize(this.label_status, 20);
         this.label_status.setHorizontalAlignment(SwingConstants.CENTER);
         this.label_status.setPreferredSize(new Dimension(400, 50));
-        this.listOfElements.put("label_status", this.label_status);
 
         //
-        this.label_currectProcessedObject = new JLabel("Aktualnie przetwarzany plik:", JLabel.CENTER);
+        this.label_currectProcessedObject = this.createElement("label_currectProcessedObject", new JLabel("", JLabel.CENTER));
+        this.label_currectProcessedObject.setHorizontalAlignment(JLabel.CENTER);
         this.label_currectProcessedObject.setVisible(true);
-        this.label_currectProcessedObject.setAlignmentX(CENTER_ALIGNMENT);
-        AbstractModule.changeFontSize(this.label_currectProcessedObject, 20);
+        this.label_currectProcessedObject.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+        BasicElement.changeFontSize(this.label_currectProcessedObject, 20);
         this.label_currectProcessedObject.setHorizontalAlignment(SwingConstants.CENTER);
         this.label_currectProcessedObject.setPreferredSize(new Dimension(400, 50));
-        this.listOfElements.put("label_currectProcessedObject", this.label_currectProcessedObject);
 
         //
-        this.currectProcessObjectPathLabel = new JLabel("\s\s\sBRAK");
-        this.scrollPane_currectProcessObjectPathScroll = new JScrollPane(this.currectProcessObjectPathLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        AbstractModule.changeFontSize(this.currectProcessObjectPathLabel, 15);
-        AbstractModule.changeFontSize(this.scrollPane_currectProcessObjectPathScroll, 15);
-        this.currectProcessObjectPathLabel.setVisible(true);
+        this.label_currentProcessObjectPathLabel = this.createElement("label_currentProcessObjectPathLabel", new JLabel());
+        this.scrollPane_currectProcessObjectPathScroll = new JScrollPane(this.label_currentProcessObjectPathLabel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        BasicElement.changeFontSize(this.label_currentProcessObjectPathLabel, 15);
+        BasicElement.changeFontSize(this.scrollPane_currectProcessObjectPathScroll, 15);
+        this.label_currentProcessObjectPathLabel.setVisible(true);
         this.scrollPane_currectProcessObjectPathScroll.setMaximumSize(new Dimension(400, 50));
-        this.listOfElements.put("currectProcessObjectPathLabel", this.currectProcessObjectPathLabel);
 
 
         //
-        this.label_filesCounterTitle = new JLabel("Liczba przetworzonych plików:", JLabel.CENTER);
+        this.label_filesCounterTitle = this.createElement("label_filesCounterTitle", new JLabel("", JLabel.CENTER));
         this.label_filesCounterTitle.setVisible(true);
-        this.label_filesCounterTitle.setAlignmentX(CENTER_ALIGNMENT);
-        AbstractModule.changeFontSize(this.label_filesCounterTitle, 20);
+        this.label_filesCounterTitle.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+        BasicElement.changeFontSize(this.label_filesCounterTitle, 20);
         this.label_filesCounterTitle.setHorizontalAlignment(SwingConstants.CENTER);
         this.label_filesCounterTitle.setPreferredSize(new Dimension(400, 50));
-        this.listOfElements.put("label_filesCounterTitle", this.label_filesCounterTitle);
-
 
         //
         this.label_filesCounter = new JLabel("0", JLabel.CENTER);
         this.label_filesCounter.setForeground(Color.BLUE);
         this.label_filesCounter.setVisible(true);
-        this.label_filesCounter.setAlignmentX(CENTER_ALIGNMENT);
-        AbstractModule.changeFontSize(this.label_filesCounter, 20);
+        this.label_filesCounter.setAlignmentX(JPanel.CENTER_ALIGNMENT);
+        BasicElement.changeFontSize(this.label_filesCounter, 20);
         this.label_filesCounter.setHorizontalAlignment(SwingConstants.CENTER);
         this.label_filesCounter.setPreferredSize(new Dimension(400, 50));
 
         //
-        this.button_start = new JButton("START");
-        AbstractModule.changeFontSize(this.button_start, 15);
+        this.button_start = this.createElement("button_start", new JButton(""));
+        BasicElement.changeFontSize(this.button_start, 15);
         this.button_start.setMaximumSize(new Dimension(400, 50));
-        this.button_start.setAlignmentX(CENTER_ALIGNMENT);
-        this.listOfElements.put("button_start", this.button_start);
-
+        this.button_start.setAlignmentX(JPanel.CENTER_ALIGNMENT);
     }
 
     @Override
     public void addElements() 
     {
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.label_choosingFolder);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.panel_choosingFolderPath);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.label_choosingFolder);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.panel_choosingFolderPath);
             this.panel_choosingFolderPath.add(Box.createHorizontalStrut(10));
             this.panel_choosingFolderPath.add(this.button_choosingFolder);
             this.panel_choosingFolderPath.add(Box.createHorizontalStrut(10));
             this.panel_choosingFolderPath.add(this.scrollPane_choosingFolderPathScroll);
-        this.add(Box.createVerticalStrut(10));
+        this.component.add(Box.createVerticalStrut(10));
         JSeparator x = new JSeparator();
         x.setMaximumSize(new Dimension(450, 1));
-        this.add(x);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.label_status);
-        this.add(Box.createVerticalStrut(10));
+        this.component.add(x);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.label_status);
+        this.component.add(Box.createVerticalStrut(10));
         JSeparator y = new JSeparator();
         y.setMaximumSize(new Dimension(450, 1));
-        this.add(y);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.label_currectProcessedObject);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.scrollPane_currectProcessObjectPathScroll);
-        this.add(Box.createVerticalStrut(10));
+        this.component.add(y);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.label_currectProcessedObject);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.scrollPane_currectProcessObjectPathScroll);
+        this.component.add(Box.createVerticalStrut(10));
         JSeparator z = new JSeparator();
         z.setMaximumSize(new Dimension(450, 1));
-        this.add(z);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.label_filesCounterTitle);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.label_filesCounter);
-        this.add(Box.createVerticalStrut(10));
-        this.add(this.button_start);
+        this.component.add(z);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.label_filesCounterTitle);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.label_filesCounter);
+        this.component.add(Box.createVerticalStrut(10));
+        this.component.add(this.button_start);
     }
 
     @Override
@@ -189,9 +188,32 @@ public class CreateListModule extends AbstractModule
         this.button_start.addActionListener(e -> this.startMakingList());
     }
 
+    @Override
+    public void setLanguage() 
+    {
+        Component temp;
+        String content;
+        JSONObject languageContent = Language.getGlobalContent(this.getID());
+        
+        for(Map.Entry<String, Component> c : this.listOfElements.entrySet())
+        {
+            
+            temp = this.listOfElements.get(c.getKey());
+            content = languageContent.getJSONArray(c.getKey()).getString(0);
+            if(temp instanceof JLabel)
+            {
+                ((JLabel)temp).setText(content);
+            }
+            else if(temp instanceof JButton)
+            {
+                ((JButton)temp).setText(content);
+            }
+        }
+    }
+
     public void updateChoosedFolderPathLabel(File newPath)
     {
-        if(newPath == null) this.label_choosingFolderPath.setText(this.getLanguageRecord("label_choosingFolderPath", 0));
+        if(newPath == null) this.label_choosingFolderPath.setText(this.language.getLanguageRecord("label_choosingFolderPath", 0));
         else this.label_choosingFolderPath.setText("   " + newPath.getPath() + "  ");
     }
 
@@ -199,15 +221,15 @@ public class CreateListModule extends AbstractModule
     {
         if(!this.startStopButtonFlag)
         {
-            JFileChooser x = new JFileChooser(this.getLanguageRecord("fileChooser_title", 0));
+            JFileChooser x = new JFileChooser(this.language.getLanguageRecord("fileChooser_title", 0));
             x.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             while(true)
             {
-                int flag = x.showOpenDialog(this);
+                int flag = x.showOpenDialog(this.component);
                 if(flag == JFileChooser.APPROVE_OPTION)
                 {
                     this.choosenFolder = x.getSelectedFile();
-                    if(this.choosenFolder.listFiles() == null) JOptionPane.showMessageDialog(this, this.getLanguageRecord("error", 0),this.getLanguageRecord("not_read_folder", 0), JOptionPane.ERROR_MESSAGE);
+                    if(this.choosenFolder.listFiles() == null) JOptionPane.showMessageDialog(this.component, this.language.getLanguageRecord("error", 0),this.language.getLanguageRecord("not_read_folder", 0), JOptionPane.ERROR_MESSAGE);
                     else break;
                 }
                 else
@@ -227,17 +249,17 @@ public class CreateListModule extends AbstractModule
         {
             this.startStopButtonFlag = true;
             this.button_start.setText("STOP");
-            this.label_status.setText(this.getLanguageRecord("label_status", 1));
+            this.label_status.setText(this.language.getLanguageRecord("label_status", 1));
             this.label_status.setForeground(Color.BLUE);
             this.label_status.paintImmediately(this.label_status.getVisibleRect());
             this.myThread = new Thread(this::createList);
             this.myThread.start();
-            this.currectProcessObjectPathLabel.setText(this.getLanguageRecord("currectProcessObjectPathLabel", 0));
-            this.currectProcessObjectPathLabel.paintImmediately(this.currectProcessObjectPathLabel.getVisibleRect());
+            this.label_currentProcessObjectPathLabel.setText(this.language.getLanguageRecord("label_currentProcessObjectPathLabel", 0));
+            this.label_currentProcessObjectPathLabel.paintImmediately(this.label_currentProcessObjectPathLabel.getVisibleRect());
         }        
         else if(this.choosenFolder == null)
         {
-            JOptionPane.showMessageDialog(this,this.getLanguageRecord("not_choose_folder", 0),this.getLanguageRecord("error", 0), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this.component, this.language.getLanguageRecord("not_choose_folder", 0),this.language.getLanguageRecord("error", 0), JOptionPane.ERROR_MESSAGE);
             this.startStopButtonFlag = false;
         }
     }
@@ -262,10 +284,10 @@ public class CreateListModule extends AbstractModule
                         twoDimensionList.removeLast();
                         break;
                     }
-                    mainList.add(AbstractModule.newTabCharacterByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
+                    mainList.add(CreateListModule.newTabCharacterByLevel(twoDimensionList.size() - 1) + twoDimensionList.getLast().getFirst().getName());
                     this.filesCounter++;
-                    this.currectProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
-                    this.currectProcessObjectPathLabel.paintImmediately(this.currectProcessObjectPathLabel.getVisibleRect());
+                    this.label_currentProcessObjectPathLabel.setText("\s\s\s" + twoDimensionList.getLast().getFirst().getName());
+                    this.label_currentProcessObjectPathLabel.paintImmediately(this.label_currentProcessObjectPathLabel.getVisibleRect());
                     this.label_filesCounter.setText(Long.toString(this.filesCounter));
                     this.label_filesCounter.paintImmediately(this.label_filesCounter.getVisibleRect());
                     if(twoDimensionList.getLast().getFirst().isDirectory())
@@ -287,7 +309,7 @@ public class CreateListModule extends AbstractModule
             }
             if(twoDimensionList.size() == 0) break;
         }
-        this.label_status.setText(this.getLanguageRecord("label_status", 0));
+        this.label_status.setText(this.language.getLanguageRecord("label_status", 0));
         this.label_status.setForeground(Color.RED);
         this.label_status.paintImmediately(this.label_status.getVisibleRect());
         Path temp = null;
@@ -314,12 +336,12 @@ public class CreateListModule extends AbstractModule
             tempName = tempName.replace(z, "");
         }
         JFileChooser x = new JFileChooser();
-        x.setDialogTitle(this.getLanguageRecord("save_file", 0));
+        x.setDialogTitle(this.language.getLanguageRecord("save_file", 0));
         
         while(true)
         {
             x.setSelectedFile(new File(tempName + ".txt"));
-            int flag = x.showSaveDialog(this);
+            int flag = x.showSaveDialog(this.component);
             if(flag == JFileChooser.APPROVE_OPTION)
             {
                 File y = x.getSelectedFile();
@@ -332,17 +354,24 @@ public class CreateListModule extends AbstractModule
                 }
                 catch (Exception e) 
                 {
-                    JOptionPane.showMessageDialog(this,this.getLanguageRecord("wrong_file_name", 0),this.getLanguageRecord("error", 0), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this.component,this.language.getLanguageRecord("wrong_file_name", 0),this.language.getLanguageRecord("error", 0), JOptionPane.ERROR_MESSAGE);
                 }
             }
             else break;
         }
-        this.button_start.setText(this.getLanguageRecord("button_start", 0));
+        this.button_start.setText(this.language.getLanguageRecord("button_start", 0));
         this.startStopButtonFlag = false;
         this.choosenFolder = null;
-        this.currectProcessObjectPathLabel.setText(this.getLanguageRecord("currectProcessObjectPathLabel", 0));
-        this.label_choosingFolderPath.setText(this.getLanguageRecord("label_choosingFolderPath", 0));
+        this.label_currentProcessObjectPathLabel.setText(this.language.getLanguageRecord("label_currentProcessObjectPathLabel", 0));
+        this.label_choosingFolderPath.setText(this.language.getLanguageRecord("label_choosingFolderPath", 0));
         this.filesCounter = 0;
         this.label_filesCounter.setText(Integer.toString(0));
+    }
+
+    public static String newTabCharacterByLevel(int level)
+    {
+        String x = "";
+        for(int i=0; i<level; i++) x += "\t";
+        return x;
     }
 }

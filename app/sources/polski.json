@@ -1,13 +1,20 @@
 {
+    "Tabs":
+    {
+        "CreateListModule": "Tworzenie listy",
+        "EditShowModule": "Pokaż/edytuj",
+        "SettingsModule": "Ustawienia",
+        "AboutModule": "O programie"
+    },
+    
     "CreateListModule":
     {
-        "titleModule":["Tworzenie listy"],
         "label_choosingFolder":["Wybierz folder do zrobienia listy:"],
         "button_choosingFolder":["Wybierz folder"],
         "label_choosingFolderPath":["   BRAK"],
         "label_status":["Aktualny status: BRAK DZIAŁANIA", "Aktualny status: DZIAŁANIE"],
         "label_currectProcessedObject":["Aktualnie przetwarzany plik:"],
-        "currectProcessObjectPathLabel":["   BRAK"],
+        "label_currentProcessObjectPathLabel":["   BRAK"],
         "label_filesCounterTitle":["Liczba przetworzonych plików!"],
         "button_start":["START", "STOP"],
         "not_choose_folder":["Nie wybrano folderu do zrobienia listy!"],
@@ -18,7 +25,7 @@
         "not_read_folder":["Nie można odczytać zawartości tego folderu!"] 
     },
 
-    "EditShowListModule":
+    "EditShowModule":
     {
         "titleModule":["Pokaż/Edytuj"],
         "label_loadFilesTitle":["Wybierz plik do wyświetlenia:"],
@@ -26,13 +33,21 @@
         "button_removeFiles":["Usuń plik"],
         "button_addFolder":["Dodaj folder"],
         "button_reset":["Reset"],
-        "button_generateList":["Generuj listę"]
+        "button_generateList":["Generuj listę"],
+        "fileChooser_title":["Wybierz plik"],
+        "folderChooser_title":["Wybierz folder"],
+        "not_choose_any_file":["NIe wybrano żadnego pliku!"],
+        "error":["Bład!"]
     },
 
-    "Settings":
+    "ProgressCreatingTree":
     {
-        "titleModule":["Ustawienia"],
-        "label_settingsHeader":["Ustawienia"],
-        "setNewThemeMessage":["Aby ustawić nowy widok trzeba uruchomić aplikacje ponownie!", "Komunikat"]
+        "label_firstTitle": ["Przetwarzanie plików:"],
+        "label_secondTitle": ["Przetwarzanie linijek obecnego pliku:"]
+    },
+
+    "SettingsModule":
+    {
+        "label_settingsHeader":["Ustawienia"]
     }
 }

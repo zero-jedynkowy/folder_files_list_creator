@@ -1,13 +1,20 @@
 {
+    "Tabs":
+    {
+        "CreateListModule": "Creating a list",
+        "EditShowModule": "Showing/Editing a list",
+        "SettingsModule": "Settings",
+        "AboutModule": "About the program"
+    },
+
     "CreateListModule":
     {
-        "titleModule":["Creating a list"],
         "label_choosingFolder":["Choose a folder to make a list:"],
         "button_choosingFolder":["Choose a folder"],
         "label_choosingFolderPath":["   EMPTY"],
         "label_status":["Current status: NOT WORKING", "Current status: WORKING"],
         "label_currectProcessedObject":["Current processing file:"],
-        "currectProcessObjectPathLabel":["   EMPTY"],
+        "label_currentProcessObjectPathLabel":["   EMPTY"],
         "label_filesCounterTitle":["A count of processed files:"],
         "button_start":["START", "STOP"],
         "not_choose_folder":["The list's folder wasn't choosen!"],
@@ -18,22 +25,34 @@
         "not_read_folder":["There is no possibility to read the content of the chosen folder!"]
     },
 
-    "EditShowListModule":
+    "EditShowModule":
     {
-        "titleModule":["Show/Edit"],
         "label_loadFilesTitle":["Choose files to show"],
         "button_addFile":["Add a file"],
         "button_removeFiles":["Delete a file"],
         "button_addFolder":["Add a folder"],
         "button_reset":["Reset"],
-        "button_generateList":["Generate a list"]
+        "button_generateList":["Generate a list"],
+        "fileChooser_title":["Choose a file"],
+        "folderChooser_title":["Choose a folder"],
+        "not_choose_any_file":["None file was choosen!"],
+        "error":["Error!"]
     },
 
-    "Settings":
+    "ProgressCreatingTree":
     {
-        "titleModule":["Settings"],
-        "label_settingsHeader":["Settings"],
-        "setNewThemeMessage":["To set a new layout, you need to restart the program!", "Message!"]
+        "label_firstTitle": ["Processing files:"],
+        "label_secondTitle": ["Processing lines of the current file:"]
+    },
 
+    "EditShowFrame":
+    {
+        "frame_leftFrame":["Created tree of the files"],
+        "frame_rightFrame":["Menu"]
+    },
+
+    "SettingsModule":
+    {
+        "label_settingsHeader":["Settings"]
     }
 }
