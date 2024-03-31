@@ -1,7 +1,10 @@
+package fflc;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -28,16 +31,17 @@ public class Settings
     public static void loadSettings()
     {
         String data = "";
+        InputStream inputStream = Settings.class.getClassLoader().getResourceAsStream("sources/settings.json");
         try 
         {
-            File myObj = new File("app/sources/settings.json");
-            Scanner myReader = new Scanner(myObj);
+            // File myObj = new File("app/sources/settings.json");
+            Scanner myReader = new Scanner(inputStream);
             while (myReader.hasNextLine()) {
             data += myReader.nextLine();
         }
         myReader.close();
         } 
-        catch (FileNotFoundException e) 
+        catch (Exception e) 
         {
             System.out.println("An error occurred.");
             e.printStackTrace();

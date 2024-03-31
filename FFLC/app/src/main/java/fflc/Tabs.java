@@ -1,3 +1,5 @@
+package fflc;
+
 import java.awt.BorderLayout;
 import java.awt.RenderingHints.Key;
 import java.util.LinkedList;

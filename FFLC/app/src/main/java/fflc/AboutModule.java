@@ -1,3 +1,5 @@
+package fflc;
+
 public class AboutModule extends BasicModule
 {
     public AboutModule(String id) 

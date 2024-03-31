@@ -1,3 +1,5 @@
+package fflc;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 import java.awt.Component;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class Language
 {
@@ -45,23 +48,23 @@ public class Language
         switch(language)
         {
             case 0:
-                fileName = "app/sources/english.json";
+                fileName = "sources/english.json";
                 break;
             case 1:
-                fileName = "app/sources/polski.json";
+                fileName = "sources/polski.json";
                 break;
         }
         String data = "";
         try 
         {
-            File myObj = new File(fileName);
+            InputStream myObj = Settings.class.getClassLoader().getResourceAsStream(fileName);
             Scanner myReader = new Scanner(myObj);
             while (myReader.hasNextLine()) {
             data += myReader.nextLine();
         }
         myReader.close();
         } 
-        catch (FileNotFoundException e) 
+        catch (Exception e) 
         {
             System.out.println("An error occurred.");
             e.printStackTrace();
