@@ -40,6 +40,7 @@ public class Main extends JFrame
             Settings.loadSettings();
             Language.loadLanguage((int)Settings.getSetting("global", "language"));
             Language.setLanguage();
+        this.revalidate();
         this.setVisible(true);
     }
     

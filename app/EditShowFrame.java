@@ -1,8 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -13,21 +16,34 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
+import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
+import javax.swing.tree.DefaultTreeModel;
 
-public class EditShowFrame extends BasicElement<JFrame> implements ComponentListener, WindowListener
+public class EditShowFrame extends BasicElement<JFrame> implements ComponentListener, WindowListener, ChangeListener
 {
     private JPanel mainPanel;
     private JInternalFrame frame_leftFrame;
+        public JScrollPane scrollPane_treeParent;
+        JTree tree;
+        DefaultMutableTreeNode node;
     private JInternalFrame frame_rightFrame;
         private JPanel panel_rightFrameContent;
             private JLabel label_scaleTitle;
@@ -37,8 +53,8 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
             private JButton button_findButton;
             private JSeparator separator_secondSeparator;
             private JButton button_exportData;
-    GroupLayout layout;
-    GridBagConstraints gbc;
+ 
+    
 
     public EditShowFrame(String id) 
     {
@@ -58,7 +74,10 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
         this.frame_leftFrame = this.createElement("frame_leftFrame", new JInternalFrame());
         this.frame_leftFrame.setMaximumSize(new Dimension(Main.WIDTH/2, Main.HEIGHT));
         this.frame_leftFrame.setVisible(true);
-        
+
+            this.scrollPane_treeParent = new JScrollPane();
+            this.scrollPane_treeParent.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+
         this.frame_rightFrame = this.createElement("frame_rightFrame", new JInternalFrame());
         this.frame_rightFrame.setMaximumSize(new Dimension(Main.WIDTH/2, Main.HEIGHT));
         this.frame_rightFrame.setVisible(true);
@@ -75,6 +94,9 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
             this.label_scaleTitle.setMaximumSize(new Dimension(200, 50));
 
             this.slider_scaleSlider = new JSlider();
+            this.slider_scaleSlider.setMinimum(1);
+            this.slider_scaleSlider.setMaximum(150);
+            this.slider_scaleSlider.setValue(75);
             this.slider_scaleSlider.setMajorTickSpacing(100);
             this.slider_scaleSlider.setMinorTickSpacing(10);
             this.slider_scaleSlider.setMaximumSize(new Dimension(200, 50));
@@ -99,12 +121,6 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
             this.button_exportData.setAlignmentX(JButton.CENTER_ALIGNMENT);
             BasicElement.changeFontSize(this.button_exportData, 15);
             this.button_exportData.setMaximumSize(new Dimension(200, 50));
-            
-
-        this.component.addComponentListener(this);
-
-        ///////
-        this.component.setVisible(true);
     }
 
     @Override
@@ -113,6 +129,9 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
         this.component.add(this.frame_leftFrame, BorderLayout.WEST);
         this.component.add(this.frame_rightFrame, BorderLayout.CENTER);
         this.frame_leftFrame.setPreferredSize(new Dimension((int)(0.7*this.component.getWidth()), this.frame_leftFrame.getHeight()));
+
+            this.frame_leftFrame.add(this.scrollPane_treeParent);
+
         this.frame_rightFrame.setPreferredSize(new Dimension((int)(0.3*this.component.getWidth()), this.frame_rightFrame.getHeight()));
         
             this.frame_rightFrame.add(this.panel_rightFrameContent);
@@ -128,13 +147,45 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
                 this.panel_rightFrameContent.add(this.separator_secondSeparator);
                 this.panel_rightFrameContent.add(Box.createVerticalStrut(5));
                 this.panel_rightFrameContent.add(this.button_exportData);
-                
+    }
+
+    void show(boolean flag, JTree tree, DefaultMutableTreeNode node)
+    {
+        if(flag)
+        {
+            this.tree = tree;
+            this.node = node;
+            this.scrollPane_treeParent.setBackground(null);
+            this.tree.setBackground(null);
+            this.tree.setCellRenderer(this.createRenderer(25));
+            this.slider_scaleSlider.setValue(25);
+            
+            this.scrollPane_treeParent.setViewportView(this.tree);
+            
+
+            this.component.setVisible(flag);
+        }
+        else
+        {
+            this.component.setVisible(false);
+        }
     }
 
     @Override
     public void setActions() 
     {
         this.component.addWindowListener(this);
+        this.component.addComponentListener(this);
+        this.slider_scaleSlider.addChangeListener(this);
+        this.button_findButton.addActionListener(e -> {
+            DefaultTreeModel model = (DefaultTreeModel)this.tree.getModel();
+            DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
+            
+            // model.reload(root);
+            
+            
+            System.out.println();
+        });
     }
 
     @Override
@@ -218,4 +269,45 @@ public class EditShowFrame extends BasicElement<JFrame> implements ComponentList
         // throw new UnsupportedOperationException("Unimplemented method 'windowOpened'");
     }
     
+
+    DefaultTreeCellRenderer createRenderer(int scale)
+    {
+        int iconSize = scale;
+        DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
+            @Override
+            public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+                super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+                DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+                setBackground(null);
+                setFont(tree.getFont().deriveFont(Font.BOLD, iconSize));
+                setBackgroundNonSelectionColor(null); 
+
+                setOpenIcon(scaleIcon(getOpenIcon(), iconSize));
+                setClosedIcon(scaleIcon(getClosedIcon(), iconSize));
+                setLeafIcon(scaleIcon(getLeafIcon(), iconSize));
+                return this;
+            }
+        };
+
+        
+        return renderer;
+    }
+
+    private static ImageIcon scaleIcon(Icon icon, int size) {
+        if (icon instanceof ImageIcon) {
+            Image img = ((ImageIcon) icon).getImage();
+            Image scaledImg = img.getScaledInstance(size, size, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        }
+        return null;
+    }
+
+    @Override
+    public void stateChanged(ChangeEvent arg0) 
+    {
+        if((JSlider)arg0.getSource() == this.slider_scaleSlider)
+        {
+            this.tree.setCellRenderer(this.createRenderer(this.slider_scaleSlider.getValue()));
+        }
+    }
 }

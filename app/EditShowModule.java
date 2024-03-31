@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.List;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -30,7 +33,9 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 import org.json.JSONObject;
 
@@ -282,16 +287,10 @@ public class EditShowModule extends BasicModule implements Runnable
             makeTree.start();
             this.processStatsDialog.component.setVisible(true);
             
-
-
-
-
-
-            
             this.originalTree = new JTree(this.originalNode);
+            
             BasicElement.changeFontSize(this.originalTree, 20);
-            //// this.panel_results.setViewportView(this.originalTree);
-            this.frame_newWindow.component.setVisible(true);
+            this.frame_newWindow.show(true, this.originalTree, this.originalNode);
             Main.mainWindow.setEnabled(false);
         }
     }
@@ -392,6 +391,4 @@ public class EditShowModule extends BasicModule implements Runnable
         }
         return mainTree;
     }
-    
-    
 }
