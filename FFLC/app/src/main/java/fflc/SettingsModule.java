@@ -1,24 +1,11 @@
-package fflc;
-
 import java.awt.Dimension;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Scanner;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-
-import org.json.JSONObject;
 
 public class SettingsModule extends BasicModule
 {
@@ -102,11 +89,11 @@ public class SettingsModule extends BasicModule
 
     public void setAndCheckNewSettings()
     {
-        boolean first = (int)this.settings.getSetting("global", "language") == this.comboBox_choosingLanguage.getSelectedIndex();
+        boolean first = (int)this.settings.getSetting("SettingsModule", "language") == this.comboBox_choosingLanguage.getSelectedIndex();
         if(!first)
         {
-            Settings.setSetting("global", "language", this.comboBox_choosingLanguage.getSelectedIndex());
-            Language.loadLanguage((int)Settings.getSetting("global", "language"));
+            Settings.setSetting("SettingsModule", "language", this.comboBox_choosingLanguage.getSelectedIndex());
+            Language.loadLanguage((int)Settings.getSetting("SettingsModule", "language"));
             Language.setLanguage();
         }
         Settings.saveSettings();

@@ -1,12 +1,7 @@
-package fflc;
-
 import java.awt.BorderLayout;
-import java.awt.RenderingHints.Key;
 import java.util.LinkedList;
-
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-
 import org.json.JSONObject;
 
 public class Tabs extends BasicElement<JPanel>

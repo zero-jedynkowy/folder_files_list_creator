@@ -1,5 +1,3 @@
-package fflc;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.io.File;
@@ -10,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -24,12 +21,7 @@ import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.Component;
-import java.util.HashMap;
 import java.util.Map;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import org.json.JSONObject;
 
 public class CreateListModule extends BasicModule

@@ -1,0 +1,4 @@
+cd FFLC
+./gradlew jar
+cd ..
+java -jar FFLC.jar

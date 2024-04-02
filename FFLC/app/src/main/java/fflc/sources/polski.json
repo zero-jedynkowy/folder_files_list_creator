@@ -49,5 +49,11 @@
     "SettingsModule":
     {
         "label_settingsHeader":["Ustawienia"]
+    },
+    
+    "EditShowFrame":
+    {
+        "frame_leftFrame":["Created tree of the files"],
+        "frame_rightFrame":["Menu"]
     }
 }

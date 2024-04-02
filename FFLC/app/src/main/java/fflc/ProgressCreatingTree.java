@@ -1,10 +1,7 @@
-package fflc;
-
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JDialog;

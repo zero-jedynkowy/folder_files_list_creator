@@ -1,18 +1,7 @@
-package fflc;
-
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Scanner;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-
 import org.json.JSONObject;
-
-import java.awt.Component;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class Language
@@ -58,9 +47,12 @@ public class Language
         try 
         {
             InputStream myObj = Settings.class.getClassLoader().getResourceAsStream(fileName);
+            
             Scanner myReader = new Scanner(myObj);
+            
             while (myReader.hasNextLine()) {
             data += myReader.nextLine();
+            
         }
         myReader.close();
         } 

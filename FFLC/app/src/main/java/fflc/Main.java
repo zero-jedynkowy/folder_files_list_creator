@@ -1,20 +1,6 @@
-package fflc;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Frame;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import org.json.*;
 
@@ -40,7 +26,7 @@ public class Main extends JFrame
             this.tabs.init();
             this.add(this.tabs.component);
             Settings.loadSettings();
-            Language.loadLanguage((int)Settings.getSetting("global", "language"));
+            Language.loadLanguage((int)Settings.getSetting("SettingsModule", "language"));
             Language.setLanguage();
         this.revalidate();
         this.setVisible(true);

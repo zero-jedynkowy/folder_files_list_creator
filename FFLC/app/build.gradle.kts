@@ -37,7 +37,7 @@ application {
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "fflc.Main"
+        attributes["Main-Class"] = "Main"
     }
         destinationDirectory = File("$rootDir/..")
         archiveBaseName.set("FFLC")

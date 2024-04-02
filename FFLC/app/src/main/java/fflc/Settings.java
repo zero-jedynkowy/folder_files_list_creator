@@ -1,13 +1,12 @@
-package fflc;
-
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.io.*;
 import java.util.Scanner;
-
 import org.json.JSONObject;
 
 interface SettingsInterface
@@ -30,30 +29,58 @@ public class Settings
 
     public static void loadSettings()
     {
+        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "settings_fflc.json");
         String data = "";
-        InputStream inputStream = Settings.class.getClassLoader().getResourceAsStream("sources/settings.json");
+        InputStream inputStream = null;
+        Scanner myReader = null;
+        if(!Files.exists(tempDir))
+        {
+            inputStream = Settings.class.getClassLoader().getResourceAsStream("sources/settings_fflc.json");
+            myReader = new Scanner(inputStream);
+            while (myReader.hasNextLine()) 
+            {
+                data += myReader.nextLine();
+            }
+            myReader.close();
+            try 
+            {
+                FileWriter file = new FileWriter(tempDir.toString());
+                file.write(data);
+                file.close();
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("An error occurred.");
+            }
+            System.err.println(tempDir.toString());
+        }
+        
+        data = "";
         try 
         {
+            inputStream = new FileInputStream(tempDir.toString());
             // File myObj = new File("app/sources/settings.json");
-            Scanner myReader = new Scanner(inputStream);
+            myReader = new Scanner(inputStream);
             while (myReader.hasNextLine()) {
-            data += myReader.nextLine();
+            data += myReader.nextLine();}
+            myReader.close();
         }
-        myReader.close();
-        } 
         catch (Exception e) 
         {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
+        
         Settings.allSettings = new JSONObject(data);
     }
 
     public static void saveSettings()
     {
-
-        try (FileWriter file = new FileWriter("app/sources/settings.json")) 
+        System.out.println(Settings.allSettings.toString());
+        Path tempDir = Paths.get(System.getProperty("java.io.tmpdir"), "settings_fflc.json");
+        try (FileWriter file = new FileWriter(tempDir.toString())) 
         {
+            
             file.write(Settings.allSettings.toString());
         } 
         catch (IOException e) 
